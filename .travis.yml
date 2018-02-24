@@ -22,7 +22,7 @@ after_script:
     - git config user.email "me@wenjieyan.com"
     - git add .
     - git commit -m "Travis CI Auto Builder"
-    - git push --force --quiet "https://${Travis_TOKEN}@${GH_REF}" master:master
+    - git push --force --quiet "https://${Travis_Token}@${GH_REF}" master:master
 branches:
     only:
         - hexo # 只监测hexo分支
