@@ -239,6 +239,129 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/17/骚操作合集/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/17/骚操作合集/" itemprop="url">夕顔 | 骚操作合集</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-17T10:42:34+00:00">
+                2018-03-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>reducer里，如果我们想删除一项，进行如下操作。妈妈再也不用担心我拷贝对象了。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> removeQuestion = <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line"><span class="keyword">const</span> &#123; id &#125; = action.payload</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原来我们需要这么做</span></span><br><span class="line"><span class="keyword">const</span> newState = <span class="built_in">Object</span>.assign(&#123;&#125;, state)</span><br><span class="line"><span class="keyword">delete</span> newState[id]</span><br><span class="line"><span class="keyword">return</span> newState</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 现在我们可以这么做</span></span><br><span class="line"><span class="keyword">return</span> <span class="function">(<span class="params">(&#123; [id]: deleted, ...newState &#125;</span>) =&gt;</span> newState)(state)</span><br></pre></td></tr></table></figure></p>
+<p>此处巧妙地运用对象的解构赋值对属性进行过滤。</p>
+<hr>
+<p>看高阶函数的时候对下面一段代码印象深刻。实在精妙。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.before = <span class="function"><span class="keyword">function</span>(<span class="params">beforefn</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> __self = <span class="keyword">this</span> <span class="comment">// this -&gt; 调用该函数的对象 -&gt; 即func</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="comment">// this -&gt; window</span></span><br><span class="line">        beforefn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>) <span class="comment">// window调用beforefn</span></span><br><span class="line">        <span class="keyword">return</span> __self.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>) <span class="comment">// window调用func 返回值为func()的返回值</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Function</span>.prototype.after = <span class="function"><span class="keyword">function</span>(<span class="params">afterfn</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> __self = <span class="keyword">this</span> <span class="comment">// 调用该函数的对象 -&gt; 即调用 func.before() 返回的函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="comment">// [入口] 最后func()调用的是该函数 this -&gt; window</span></span><br><span class="line">        <span class="keyword">const</span> ret = __self.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>) <span class="comment">// window 调用 func.before() 返回的函数  ret为func()的返回值</span></span><br><span class="line">        afterfn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>) <span class="comment">// window调用afterfn</span></span><br><span class="line">        <span class="keyword">return</span> ret <span class="comment">// [出口]返回func()的返回值</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> func = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'i am ret'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func = func.before(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">&#125;).after(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/15/那些年干过的蠢事/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -818,7 +941,7 @@
 </ul>
 <h2 id="新明解"><a href="#新明解" class="headerlink" title="新明解"></a>新明解</h2><p>【Apple ID】<a href="mailto:jblzw8549@163.com" target="_blank" rel="noopener">jblzw8549@163.com</a><br>【密码】Dd112211</p>
 <h2 id="大辞泉"><a href="#大辞泉" class="headerlink" title="大辞泉"></a>大辞泉</h2><p>【Apple ID】<a href="mailto:ptog566@163.com" target="_blank" rel="noopener">ptog566@163.com</a><br>【密码】Dd112211</p>
-<h2 id="Ebpocket"><a href="#Ebpocket" class="headerlink" title="Ebpocket"></a>Ebpocket</h2><h1 id="古典文法"><a href="#古典文法" class="headerlink" title="古典文法"></a>古典文法</h1><h1 id="日文原著"><a href="#日文原著" class="headerlink" title="日文原著"></a>日文原著</h1><p>下面放一些原著的电子资源，长期更新。<br> 书名        | 作者    |  链接  |<br>—|—|—<br> 言の葉の庭        | 新海誠      |   <a href="https://pan.baidu.com/s/1uJaNLx0r4dLpDYcKIRJs1w" target="_blank" rel="noopener">https://pan.baidu.com/s/1uJaNLx0r4dLpDYcKIRJs1w</a><br> 君の名は        | 新海誠      |   <a href="https://pan.baidu.com/s/1uzrkEwlfAjj8_rqDVkDGhg" target="_blank" rel="noopener">https://pan.baidu.com/s/1uzrkEwlfAjj8_rqDVkDGhg</a><br>予知夢        | 東野圭吾      |   <a href="https://pan.baidu.com/s/1qG6HHA4TXSlB50rfBOilYQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1qG6HHA4TXSlB50rfBOilYQ</a><br>赤い指        | 東野圭吾      |   <a href="https://pan.baidu.com/s/1Pl7b738x5XR8uUg4qYNrVg" target="_blank" rel="noopener">https://pan.baidu.com/s/1Pl7b738x5XR8uUg4qYNrVg</a><br>国境の南、太陽の西        | 村上春樹      |   <a href="https://pan.baidu.com/s/1LQAwaM6D6K11Fuux9CLplQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1LQAwaM6D6K11Fuux9CLplQ</a><br>バーナード嬢曰く。        |       |   <a href="https://pan.baidu.com/s/1GA4ia0fcyAXx0YPJ4NOLBg" target="_blank" rel="noopener">https://pan.baidu.com/s/1GA4ia0fcyAXx0YPJ4NOLBg</a>   |<br>確かな力が身につくPython「超」入門       |      |   <a href="https://pan.baidu.com/s/1E6ODoWnEtcjrKP2yndeNUQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1E6ODoWnEtcjrKP2yndeNUQ</a><br>論文の教室        | 　　　     |   <a href="https://pan.baidu.com/s/1p8-pTEZ40eg_x7q-8BrpNQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1p8-pTEZ40eg_x7q-8BrpNQ</a><br>望月光の古文教室         | 　　　     |   <a href="https://pan.baidu.com/s/1tO2GzsR_wFNe-WRmVkwaCg" target="_blank" rel="noopener">https://pan.baidu.com/s/1tO2GzsR_wFNe-WRmVkwaCg</a><br>TOPIK初級　単語・文法        | 　　　     |   <a href="https://pan.baidu.com/s/1N9T7cZsJC7Vm5ANsAJUjIA" target="_blank" rel="noopener">https://pan.baidu.com/s/1N9T7cZsJC7Vm5ANsAJUjIA</a></p>
+<h2 id="Ebpocket"><a href="#Ebpocket" class="headerlink" title="Ebpocket"></a>Ebpocket</h2><h1 id="古典文法"><a href="#古典文法" class="headerlink" title="古典文法"></a>古典文法</h1><h1 id="日文原著"><a href="#日文原著" class="headerlink" title="日文原著"></a>日文原著</h1><p>下面放一些原著的电子资源，长期更新。<br> 言の葉の庭 | <a href="https://pan.baidu.com/s/1uJaNLx0r4dLpDYcKIRJs1w" target="_blank" rel="noopener">https://pan.baidu.com/s/1uJaNLx0r4dLpDYcKIRJs1w</a><br> 君の名は | <a href="https://pan.baidu.com/s/1uzrkEwlfAjj8_rqDVkDGhg" target="_blank" rel="noopener">https://pan.baidu.com/s/1uzrkEwlfAjj8_rqDVkDGhg</a><br>予知夢 | <a href="https://pan.baidu.com/s/1qG6HHA4TXSlB50rfBOilYQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1qG6HHA4TXSlB50rfBOilYQ</a><br>赤い指 | <a href="https://pan.baidu.com/s/1Pl7b738x5XR8uUg4qYNrVg" target="_blank" rel="noopener">https://pan.baidu.com/s/1Pl7b738x5XR8uUg4qYNrVg</a><br>国境の南、太陽の西 | <a href="https://pan.baidu.com/s/1LQAwaM6D6K11Fuux9CLplQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1LQAwaM6D6K11Fuux9CLplQ</a><br>バーナード嬢曰く。 | <a href="https://pan.baidu.com/s/1GA4ia0fcyAXx0YPJ4NOLBg" target="_blank" rel="noopener">https://pan.baidu.com/s/1GA4ia0fcyAXx0YPJ4NOLBg</a>   |<br>確かな力が身につくPython「超」入門 | <a href="https://pan.baidu.com/s/1E6ODoWnEtcjrKP2yndeNUQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1E6ODoWnEtcjrKP2yndeNUQ</a><br>論文の教室 | <a href="https://pan.baidu.com/s/1p8-pTEZ40eg_x7q-8BrpNQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1p8-pTEZ40eg_x7q-8BrpNQ</a><br>望月光の古文教室 | <a href="https://pan.baidu.com/s/1tO2GzsR_wFNe-WRmVkwaCg" target="_blank" rel="noopener">https://pan.baidu.com/s/1tO2GzsR_wFNe-WRmVkwaCg</a><br>TOPIK初級　単語・文法| <a href="https://pan.baidu.com/s/1N9T7cZsJC7Vm5ANsAJUjIA" target="_blank" rel="noopener">https://pan.baidu.com/s/1N9T7cZsJC7Vm5ANsAJUjIA</a></p>
 <h1 id="学习资源"><a href="#学习资源" class="headerlink" title="学习资源"></a>学习资源</h1><h1 id="奇技淫巧"><a href="#奇技淫巧" class="headerlink" title="奇技淫巧"></a>奇技淫巧</h1>
           
         
@@ -939,7 +1062,7 @@
         
           
             <p>欢迎来到B612星球🌍<br>这里记录该星球的一套命名规范<br>灵感来自「源氏物語」</p>
-<p>桐壺（きりつぼ） | 日语<br>帚木（ははきぎ） | 解决选择困难症的万事屋<br>空蝉（うつせみ） | 少女无处安放的脑洞<br>花宴（はなのえん） | 新一代中华小当家的成长历程<br>葵（あおい） | 老漂日记（持续更新中）</p>
+<p>桐壺（きりつぼ） | 日语<br>帚木（ははきぎ） | 解决选择困难症的万事屋<br>空蝉（うつせみ） | 少女无处安放的脑洞<br>夕顔（ゆうがお） | 编程日常<br>花宴（はなのえん） | 新一代中华小当家的成长历程<br>葵（あおい） | 老漂日记（持续更新中）</p>
 
           
         
@@ -1021,7 +1144,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
