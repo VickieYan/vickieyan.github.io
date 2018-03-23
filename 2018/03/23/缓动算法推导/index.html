@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/jRluvelHIpSEl65GXo7q1bh0gvqenq7r8YiqfCtKOFI!/b/dPMAAAAAAAAA&bo=igKQAYoCkAEDFzI!&rf=viewer_4">
 <meta property="og:image" content="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/OAgJS1StIUC0HlV7YyuOJIrH8MFbY5zeYzpnTqaOa14!/b/dEQBAAAAAAAA&bo=igKQAYoCkAEDFzI!&rf=viewer_4">
 <meta property="og:image" content="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/iTxQm*raWaCQWMft8qwuyoqBxnFtP431nIuGMVedUfE!/b/dEABAAAAAAAA&bo=igKQAQAAAAADFys!&rf=viewer_4">
-<meta property="og:updated_time" content="2018-03-23T15:46:48.760Z">
+<meta property="og:updated_time" content="2018-03-23T15:52:08.603Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="夕顔 | 缓动算法推导">
 <meta name="twitter:description" content="1234567891011121314151617const tween = &amp;#123;    linear: function(t, b, c, d) &amp;#123;        return c * t / d + b    &amp;#125;,    easeIn: function(t, b, c, d) &amp;#123;        return c * (t /= d) * t + b">
@@ -325,9 +325,13 @@
 </ul>
 <hr>
 <p>linear<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/Mp7p1fEqrJcCcbQDrYMjlER2pBDvMG6oVyCLISbLDkI!/b/dEUBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="linear"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//linear</span></span><br><span class="line">y = c * x / d + b</span><br><span class="line">  = c / d * x + b</span><br><span class="line">  = a * x + b</span><br></pre></td></tr></table></figure></p>
-<h2 id="非常典型的线性函数。"><a href="#非常典型的线性函数。" class="headerlink" title="非常典型的线性函数。"></a>非常典型的线性函数。</h2><p>easeIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/XTI349J6h3F.zJ4uJP8UGiIvoN8v6xxwGSPRt.sjsCU!/b/dEABAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeIn"><br>strongEaseIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/jRluvelHIpSEl65GXo7q1bh0gvqenq7r8YiqfCtKOFI!/b/dPMAAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="strongEaseIn"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//easeIn</span></span><br><span class="line">y = c * (x /= d) * x + b</span><br><span class="line">  = c * (x / d) * (x / d) + b</span><br><span class="line">  = c / d ^ <span class="number">2</span> * x ^ <span class="number">2</span> + b</span><br><span class="line">  = a * x ^ <span class="number">2</span> + b</span><br><span class="line"></span><br><span class="line"><span class="comment">//strongEaseIn</span></span><br><span class="line">y = a * x ^ <span class="number">5</span> + b</span><br></pre></td></tr></table></figure></p>
+<p>非常典型的线性函数。</p>
+<hr>
+<p>easeIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/XTI349J6h3F.zJ4uJP8UGiIvoN8v6xxwGSPRt.sjsCU!/b/dEABAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeIn"><br>strongEaseIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/jRluvelHIpSEl65GXo7q1bh0gvqenq7r8YiqfCtKOFI!/b/dPMAAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="strongEaseIn"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//easeIn</span></span><br><span class="line">y = c * (x /= d) * x + b</span><br><span class="line">  = c * (x / d) * (x / d) + b</span><br><span class="line">  = c / d ^ <span class="number">2</span> * x ^ <span class="number">2</span> + b</span><br><span class="line">  = a * x ^ <span class="number">2</span> + b</span><br><span class="line"></span><br><span class="line"><span class="comment">//strongEaseIn</span></span><br><span class="line">y = a * x ^ <span class="number">5</span> + b</span><br></pre></td></tr></table></figure></p>
 <p>看曲线图可以明显看出是平滑进入的。</p>
-<h2 id="至于什么叫strongEaseIn，自己看图体会。"><a href="#至于什么叫strongEaseIn，自己看图体会。" class="headerlink" title="至于什么叫strongEaseIn，自己看图体会。"></a>至于什么叫strongEaseIn，自己看图体会。</h2><p>easeOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/OAgJS1StIUC0HlV7YyuOJIrH8MFbY5zeYzpnTqaOa14!/b/dEQBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeOut"><br>strongEaseOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/iTxQm*raWaCQWMft8qwuyoqBxnFtP431nIuGMVedUfE!/b/dEABAAAAAAAA&amp;bo=igKQAQAAAAADFys!&amp;rf=viewer_4" alt="strongEaseOut"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// easeOut</span></span><br><span class="line"> y = b + c * (- x * x + <span class="number">2</span> * x)</span><br><span class="line"><span class="comment">//strongEaseOut</span></span><br><span class="line">y = c * ((x = x / d - <span class="number">1</span>) * x * x * x + <span class="number">1</span>) + b</span><br></pre></td></tr></table></figure></p>
+<p>至于什么叫strongEaseIn，自己看图体会。</p>
+<hr>
+<p>easeOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/OAgJS1StIUC0HlV7YyuOJIrH8MFbY5zeYzpnTqaOa14!/b/dEQBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeOut"><br>strongEaseOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/iTxQm*raWaCQWMft8qwuyoqBxnFtP431nIuGMVedUfE!/b/dEABAAAAAAAA&amp;bo=igKQAQAAAAADFys!&amp;rf=viewer_4" alt="strongEaseOut"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// easeOut</span></span><br><span class="line"> y = b + c * (- x * x + <span class="number">2</span> * x)</span><br><span class="line"><span class="comment">//strongEaseOut</span></span><br><span class="line">y = c * ((x = x / d - <span class="number">1</span>) * x * x * x + <span class="number">1</span>) + b</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -436,17 +440,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -488,22 +483,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#非常典型的线性函数。"><span class="nav-number">1.</span> <span class="nav-text">非常典型的线性函数。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#至于什么叫strongEaseIn，自己看图体会。"><span class="nav-number">2.</span> <span class="nav-text">至于什么叫strongEaseIn，自己看图体会。</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
