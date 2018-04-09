@@ -239,6 +239,155 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/04/09/祭一场飞蛾扑火/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/09/祭一场飞蛾扑火/" itemprop="url">夕顔 | 祭一场飞蛾扑火</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-09T16:58:02+00:00">
+                2018-04-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>大概从高中毕业以后，已经很久没有如此执着的想要去完成一件事了。默默的悄无声息的想要去完成一件事。</p>
+<p>幻想过无数种场景，自己披襟斩棘最终站在那栋记忆中的大楼下，迎面走过来那人会是怎样的表情呢。</p>
+<p>幻想终究是幻想，说到底自己一开始也从没有想过能够真正实现，可是就是不知道从哪一天开始脑子里就开始冒出这个疯狂的念头了。</p>
+<p>会开始去网上找一些招聘信息，开始联络学长学姐，希望能得到一个内推机会，开始补自己的知识漏洞，看很多面试题，学习棘手的算法。</p>
+<p>可是心里非常清楚，什么是以卵击石，什么是飞蛾扑火。</p>
+<p>那天晚上的心情，我还依稀记得。</p>
+<p>和学校里一个旧友谈起了工作。说真的，走到春招这一步，我已不在意身边的人到底去了哪个公司。</p>
+<p>日语里有一个词，叫“あいにく”，翻译成中文大概是“很不凑巧”的意思。仿佛是上帝偷看了我内心的剧本，而给我安排了一场内心的历练。</p>
+<p>她无意提起的公司名，有意无意的触碰到了那根倒插在我内心里尖锐的刺，一阵生疼。</p>
+<p>很不凑巧，在和她聊天前我刚好收到了笔试通知。怕什么来什么。</p>
+<p>上海寒彻骨的夜，这繁华的城，纵横满面的泪。丑态尽展。</p>
+<p>我真的不嫉妒，不，我是嫉妒的发疯。</p>
+<p>第一次，那么痛恨，痛恨自己没有早点学前端，或者，那么痛恨，自己学了前端。转行这条路，走的实在太艰辛了。</p>
+<p>那一刻，才对“少壮不努力，老大徒伤悲”这句话里藏匿着的不甘与无力，理解的如此深刻。</p>
+<p>是真的真的很不甘心吧。</p>
+<hr>
+<p>笔试并没有想象中难，也尽力做了，但终究是再没有面试通知了。</p>
+<p>功力尚浅，还需要大量的学习。</p>
+<p>真的非常希望，在下一次机会来临的时候，自己不再是此时懦弱的自己，能够勇敢的并且有足够的实力去抓住它。</p>
+<p>以下是一些题目回溯的总结。</p>
+<ol>
+<li>按顺序取出数字的英文字母，数字去重(涉及到公司名字 匿了)</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">"t1测est试23"</span>;</span><br><span class="line"><span class="keyword">let</span> nums = str.match(<span class="regexp">/\d/g</span>);</span><br><span class="line"><span class="keyword">let</span> chars = str.match(<span class="regexp">/[A-Za-z]/g</span>);</span><br><span class="line">nums = [...new <span class="built_in">Set</span>(nums)];</span><br><span class="line"><span class="keyword">let</span> s = <span class="string">""</span>;</span><br><span class="line">nums.forEach(<span class="function"><span class="params">e</span> =&gt;</span> (s += e));</span><br><span class="line">chars.forEach(<span class="function"><span class="params">e</span> =&gt;</span> (s += e));</span><br><span class="line"><span class="built_in">console</span>.log(s);</span><br></pre></td></tr></table></figure>
+<p>2.对一维数组，根据 type 生成二维数组。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = [</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  <span class="number">2</span>,</span><br><span class="line">  <span class="string">"test"</span>,</span><br><span class="line">  <span class="literal">undefined</span>,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"product"</span>,</span><br><span class="line">    content: <span class="string">"product1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"product"</span>,</span><br><span class="line">    content: <span class="string">"product2"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"tag"</span>,</span><br><span class="line">    content: <span class="string">"tag1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"product"</span>,</span><br><span class="line">    content: <span class="string">"product3"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"tag"</span>,</span><br><span class="line">    content: <span class="string">"tag2"</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">groupList</span>(<span class="params">list</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 当输入数据不合法时，输出空数组[]</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Object</span>.prototype.toString.call(list) !== <span class="string">"[object Array]"</span>) <span class="keyword">return</span> [];</span><br><span class="line">  <span class="comment">// 过滤掉不合法元素</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = list.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="keyword">if</span> (list[i] == <span class="literal">null</span> || <span class="keyword">typeof</span> list[i] != <span class="string">"object"</span>) &#123;</span><br><span class="line">      list.splice(i, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获得所有类型</span></span><br><span class="line">  <span class="keyword">let</span> types = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = list.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    types.push(list[i].type);</span><br><span class="line">  &#125;</span><br><span class="line">  types = [...new <span class="built_in">Set</span>(types)];</span><br><span class="line">  <span class="keyword">let</span> product = [],</span><br><span class="line">    tag = [],</span><br><span class="line">    res = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; types.length; j++) &#123;</span><br><span class="line">    <span class="keyword">let</span> newType = [];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = list.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">      <span class="keyword">if</span> (list[i].type == types[j]) &#123;</span><br><span class="line">        newType.unshift(list[i].content);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    res.push(newType);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> res2 = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = types.length - <span class="number">1</span>; j &gt;= <span class="number">0</span>; j--) &#123;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123; <span class="attr">type</span>: types[j], <span class="attr">content</span>: res[j] &#125;;</span><br><span class="line">    res2.push(tmp);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> res2;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> data = str;</span><br><span class="line"><span class="keyword">const</span> result = groupList(data);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(result));</span><br></pre></td></tr></table></figure>
+<ol>
+<li>实现类似迭代方法中的 map()方法</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">map</span>(<span class="params">data, fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> res;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Object</span>.prototype.toString.call(data) === <span class="string">"[object Array]"</span>) &#123;</span><br><span class="line">    res = [];</span><br><span class="line">    data.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">v, i, arr</span>) </span>&#123;</span><br><span class="line">      res.push(fn(v, i, arr));</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">Object</span>.prototype.toString.call(data) === <span class="string">"[object Object]"</span>) &#123;</span><br><span class="line">    res = &#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> data) &#123;</span><br><span class="line">      res[key] = fn(data[key], key, data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/27/排序虐我千百遍，我待排序如初恋/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1357,147 +1506,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/01/B612官方指定用语「日本語」/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vickie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lucid Dream">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/01/B612官方指定用语「日本語」/" itemprop="url">桐壺 | B612官方指定用语「日本語」</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-01T22:52:30+00:00">
-                2018-03-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>借写论文之余，总结一下这四年来关于日语学习的方方面面，希望能给正在学习日语的你一些帮助。</p>
-<h1 id="五十音图"><a href="#五十音图" class="headerlink" title="五十音图"></a>五十音图</h1><p>相信大家最开始接触日语都是从五十音图开始吧。什么平假名、片假名、罗马音、清音、浊音、半浊音，吓得大家一开始就打了退堂鼓。<br>这里先给大家科普几个概念：<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/fm4OEwtii6M*3MZImRew.g24Qi6xD2ps*9xF7AOhijg!/b/dAgBAAAAAAAA&amp;bo=NARMAgAAAAADF0w!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/rK0SKkywukvKAoCejuybM2h*yMu3NJCEVgBw.CVOlM0!/b/dAQBAAAAAAAA&amp;bo=LgRSAgAAAAADF0g!&amp;rf=viewer_4" alt="avatar"><br>这是几个初学者比较容易混淆的概念，自己看图体会。<br>由于博主的记忆里实在是非常非常的差，所以学习五十音的时候想了各种奇技淫巧，下面一一道来。<br>建议大家不要在五十音图是上消耗太长的时间，经可能在两天之内搞定。</p>
-<h2 id="五十音之歌"><a href="#五十音之歌" class="headerlink" title="五十音之歌"></a>五十音之歌</h2><p><a href="https://www.bilibili.com/video/av14648349/?from=search&amp;seid=1275516687299117994" target="_blank" rel="noopener">五十音图之歌-平假名</a><br>非常洗脑的一首五十音图平假名的歌，刚开始学习五十音的时候可以以此歌为辅，熟悉日语假名的基本发音。</p>
-<h2 id="冷水的日语教室"><a href="#冷水的日语教室" class="headerlink" title="冷水的日语教室"></a>冷水的日语教室</h2><p><a href="https://www.bilibili.com/video/av6684694/?from=search&amp;seid=1275516687299117994" target="_blank" rel="noopener">字幕组学日语—平假名篇</a><br><a href="https://www.bilibili.com/video/av6865959/?spm_id_from=333.338.recommend_report.1" target="_blank" rel="noopener">我从没见过你这样教五十音图的！——片假名篇</a><br>强推冷水的日语教室，清奇的脑洞，猥琐的联想，会让你非常快的记住某些假名。<br>联想对于最初学习假名的阶段非常重要，所以大家要打开自己的脑洞，把这些假名和身边的事物产生关联，从而达到快速记忆的效果</p>
-<h2 id="博主自制卡片记忆法（记忆差的盆友看这里）"><a href="#博主自制卡片记忆法（记忆差的盆友看这里）" class="headerlink" title="博主自制卡片记忆法（记忆差的盆友看这里）"></a>博主自制卡片记忆法（记忆差的盆友看这里）</h2><p>噗 由于此处需要照片展示，而博主现在已经摊在床上了，等改明儿爬起来再更新这里。</p>
-<h1 id="教材"><a href="#教材" class="headerlink" title="教材"></a>教材</h1><p>这个板块为大家整理了一些常用的日语教材，由于博主还未详读下面列举的所有教材，所以部分教材的介绍暂时只能坑着，待博主写完bug之后再回来填坑。</p>
-<h2 id="新编日语（1～4）"><a href="#新编日语（1～4）" class="headerlink" title="新编日语（1～4）"></a>新编日语（1～4）</h2><p><img src="https://d2rhekw5qr4gcj.cloudfront.net/img/400sqf/from/uploads/course_photos/12467804000170516121233.jpg" alt="avatar"></p>
-<h2 id="综合日语（1～4）"><a href="#综合日语（1～4）" class="headerlink" title="综合日语（1～4）"></a>综合日语（1～4）</h2><p><img src="http://img3m7.ddimg.cn/6/27/23808417-1_w_1.jpg" alt="avatar"></p>
-<h2 id="标准日本语（初级-中级-高级）"><a href="#标准日本语（初级-中级-高级）" class="headerlink" title="标准日本语（初级+中级+高级）"></a>标准日本语（初级+中级+高级）</h2><p><img src="http://img3m5.ddimg.cn/67/36/1018872625-1_w_1.jpg" alt="avatar"></p>
-<h2 id="みんなの日本語"><a href="#みんなの日本語" class="headerlink" title="みんなの日本語"></a>みんなの日本語</h2><p><img src="http://www.ecnbooks.com/images/a6/9787560094380.jpg" alt="avatar"><br>说到教材不得不提一下，AppStore中的电子书是非常好用的。</p>
-<h2 id="新编日语（修订版）1～4册套装"><a href="#新编日语（修订版）1～4册套装" class="headerlink" title="新编日语（修订版）1～4册套装"></a>新编日语（修订版）1～4册套装</h2><h2 id="新版中日交流标准日本语-标日电子书"><a href="#新版中日交流标准日本语-标日电子书" class="headerlink" title="新版中日交流标准日本语 - 标日电子书"></a>新版中日交流标准日本语 - 标日电子书</h2><h1 id="辞典"><a href="#辞典" class="headerlink" title="辞典"></a>辞典</h1><p>说到辞典，真的是一言难尽。<br>还记得刚入学那些年，卡西欧公司的人年年都跑到学校来安利，甚至还有安利其他人来买能有折扣这种事。<br>以至于老师和日语系出生的绝大多数人都认为卡西欧是学习日语的必备神器。<br>可是博主当年就觉得这个产品很鸡肋，当然还有个原因是博主很穷。<br>所以穷逼博主大学四年为了不买卡西欧研究了各种其替代产品。<br>我至今仍对当年在知乎上看到的这句话记忆犹新：<br>「我相信卡西欧里面的辞典早晚会尽数登上各手机平台的。」</p>
-<h2 id="卡西欧"><a href="#卡西欧" class="headerlink" title="卡西欧"></a>卡西欧</h2><p><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/AB2pH49m.No1AlRB*mLWLCcpnaP8k2JDwuy8e87eIac!/b/dJEAAAAAAAAA&amp;bo=LAEsASwBLAERCT4!&amp;rf=viewer_4" alt="avatar"><br>卡西欧的话，我是觉得不差钱的同学可以入一个的，我稍微总结一下它的优点和缺点，但是因为我也没用过，所有如果有不妥的地方还请谅解。<br>优点：</p>
-<ul>
-<li>辞典较为全面<br>里面包含了广辞苑，大辞泉，新明解，类语，ことわざ等，可以说日语较为权威的辞典都涵盖了。</li>
-<li>支持跨字典跳查<br>个人觉得跳查是一个非常重要的功能，因为在查询的词条中出现生词是非常有可能发生的情况，不过手机版的大辞林和新明解也支持跳查，不过不支持跨字典查询。</li>
-<li>有声阅读资源<br>之前上听力课的时候发现室友的卡西欧上面有很多日本经典有声读物，比如《雪女》、《桃太郎》等。</li>
-<li>可以查音调<br>这个是后来才想起的一点，卡西欧可以查词汇的音调，虽然国内的一些app辞典也有发音，但是大多数都是机器生成，基本可以无视，卡西欧上的词语发音都是真人录制，对于初学者养成良好的发音习惯来说非常有用。<br>缺点：</li>
-<li>性价比<br>关于性价比这个事不好给一个准确的说法，两三千的字典对于大多数学生来说都是一个不小的数目了，虽然里面涵盖的字典远远超过这个价格，但是在有替代品的情况下，我不认为这是一个性价比很高的产品。当然还是看你们的需求了。</li>
-<li>便携性较差<br>不得不说卡西欧相较于手机在便携性上存在很大的问题。比如你在看剧、逛街的时候突然需要查一个单词，这种时候掏出你的卡西欧是一件非常反人类的事。</li>
-<li>可拓展性不佳<br>卡西欧可以说是专为辞典而生了，这个其实和kindle一样，在提高你专注力的同时限制了你的想象力。而手机在某种程度上可以说是一种为你量身定做的辞典，你不仅可以使用它的辞典功能，同时也可以使用浏览器上yahoo、看日文电子书、用印象笔记记录学习的单词，但是缺点就是指不定一个微信提示弹出来你就和你的日语学习say goodbye了。<h2 id="沪江小D"><a href="#沪江小D" class="headerlink" title="沪江小D"></a>沪江小D</h2><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/rZTHPiFcPuAkNrw0IFAnbVM*Uz1GujEnLPImj2bwKiU!/b/dPIAAAAAAAAA&amp;bo=AAEAAQAAAAADByI!&amp;rf=viewer_4" alt="沪江小D"><h2 id="MOJi辞書"><a href="#MOJi辞書" class="headerlink" title="MOJi辞書"></a>MOJi辞書</h2><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/48zY3YQxh8n4gPmqAku3KrkPVGfxYa5hd9nayld5S0U!/b/dFsBAAAAAAAA&amp;bo=LAEsAQAAAAADFzI!&amp;rf=viewer_4" alt="MOJi辞書"><h2 id="大辞林"><a href="#大辞林" class="headerlink" title="大辞林"></a>大辞林</h2><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/Tje5STKaOTfF7nKS1fvOoqZ*YjB9EM4YBWFnKxNt7Es!/b/dGcBAAAAAAAA&amp;bo=tAC0AAAAAAADFzI!&amp;rf=viewer_4" alt="大辞林"><h2 id="新明解"><a href="#新明解" class="headerlink" title="新明解"></a>新明解</h2><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/1qDvqgD3Pej4tWL3g1KofSG81GKvTSZtdR8q9bRNK18!/b/dHIAAAAAAAAA&amp;bo=9gD2AAAAAAARFyA!&amp;rf=viewer_4" alt="新明解"><br>【Apple ID】<a href="mailto:jblzw8549@163.com" target="_blank" rel="noopener">jblzw8549@163.com</a><br>【密码】Dd112211<h2 id="大辞泉"><a href="#大辞泉" class="headerlink" title="大辞泉"></a>大辞泉</h2><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/YKNFz68lwjP2.48ymCZIC9smf1Jiqz2GnRXsP6oHnMU!/b/dJEAAAAAAAAA&amp;bo=MwIXAgAAAAADJyY!&amp;rf=viewer_4" alt="大辞泉"><br>【Apple ID】<a href="mailto:ptog566@163.com" target="_blank" rel="noopener">ptog566@163.com</a><br>【密码】Dd112211<h1 id="古典文法"><a href="#古典文法" class="headerlink" title="古典文法"></a>古典文法</h1></li>
-</ul>
-<h1 id="日文原著"><a href="#日文原著" class="headerlink" title="日文原著"></a>日文原著</h1><p>下面放一些原著的电子资源，长期更新。<br> 言の葉の庭 | <a href="https://pan.baidu.com/s/1uJaNLx0r4dLpDYcKIRJs1w" target="_blank" rel="noopener">https://pan.baidu.com/s/1uJaNLx0r4dLpDYcKIRJs1w</a><br> 君の名は | <a href="https://pan.baidu.com/s/1uzrkEwlfAjj8_rqDVkDGhg" target="_blank" rel="noopener">https://pan.baidu.com/s/1uzrkEwlfAjj8_rqDVkDGhg</a><br>予知夢 | <a href="https://pan.baidu.com/s/1qG6HHA4TXSlB50rfBOilYQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1qG6HHA4TXSlB50rfBOilYQ</a><br>赤い指 | <a href="https://pan.baidu.com/s/1Pl7b738x5XR8uUg4qYNrVg" target="_blank" rel="noopener">https://pan.baidu.com/s/1Pl7b738x5XR8uUg4qYNrVg</a><br>国境の南、太陽の西 | <a href="https://pan.baidu.com/s/1LQAwaM6D6K11Fuux9CLplQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1LQAwaM6D6K11Fuux9CLplQ</a><br>バーナード嬢曰く。 | <a href="https://pan.baidu.com/s/1GA4ia0fcyAXx0YPJ4NOLBg" target="_blank" rel="noopener">https://pan.baidu.com/s/1GA4ia0fcyAXx0YPJ4NOLBg</a>   |<br>確かな力が身につくPython「超」入門 | <a href="https://pan.baidu.com/s/1E6ODoWnEtcjrKP2yndeNUQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1E6ODoWnEtcjrKP2yndeNUQ</a><br>論文の教室 | <a href="https://pan.baidu.com/s/1p8-pTEZ40eg_x7q-8BrpNQ" target="_blank" rel="noopener">https://pan.baidu.com/s/1p8-pTEZ40eg_x7q-8BrpNQ</a><br>望月光の古文教室 | <a href="https://pan.baidu.com/s/1tO2GzsR_wFNe-WRmVkwaCg" target="_blank" rel="noopener">https://pan.baidu.com/s/1tO2GzsR_wFNe-WRmVkwaCg</a><br>TOPIK初級　単語・文法| <a href="https://pan.baidu.com/s/1N9T7cZsJC7Vm5ANsAJUjIA" target="_blank" rel="noopener">https://pan.baidu.com/s/1N9T7cZsJC7Vm5ANsAJUjIA</a></p>
-<h1 id="学习资源"><a href="#学习资源" class="headerlink" title="学习资源"></a>学习资源</h1><h1 id="奇技淫巧"><a href="#奇技淫巧" class="headerlink" title="奇技淫巧"></a>奇技淫巧</h1>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1548,7 +1556,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
