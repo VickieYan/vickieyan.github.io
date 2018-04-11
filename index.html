@@ -239,6 +239,139 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/04/11/骚操作合集/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/11/骚操作合集/" itemprop="url">夕顔 | 骚操作合集</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-11T10:42:34+00:00">
+                2018-04-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>reducer 里，如果我们想删除一项，进行如下操作。妈妈再也不用担心我拷贝对象了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> removeQuestion = <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; id &#125; = action.payload;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 正常操作</span></span><br><span class="line">  <span class="keyword">const</span> newState = <span class="built_in">Object</span>.assign(&#123;&#125;, state);</span><br><span class="line">  <span class="keyword">delete</span> newState[id];</span><br><span class="line">  <span class="keyword">return</span> newState;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 骚操作</span></span><br><span class="line"><span class="keyword">return</span> <span class="function">(<span class="params">(&#123; [id]: deleted, ...newState &#125;</span>) =&gt;</span> newState)(state);</span><br></pre></td></tr></table></figure>
+<p>此处巧妙地运用解构赋值对对象的属性进行过滤。</p>
+<hr>
+<p>看高阶函数的时候对下面一段代码印象深刻。实在精妙。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.before = <span class="function"><span class="keyword">function</span>(<span class="params">beforefn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> __self = <span class="keyword">this</span>; <span class="comment">// this -&gt; func</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// this -&gt; window</span></span><br><span class="line">    beforefn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>);</span><br><span class="line">    <span class="keyword">return</span> __self.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>); <span class="comment">// 调用func 返回值为func()的返回值</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Function</span>.prototype.after = <span class="function"><span class="keyword">function</span>(<span class="params">afterfn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> __self = <span class="keyword">this</span>; <span class="comment">// this -&gt; 即调用 func.before返回的函数</span></span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// [入口] this -&gt; window</span></span><br><span class="line">    <span class="keyword">const</span> ret = __self.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>); <span class="comment">// window调用 func.before返回的函数 ret为func()的返回值</span></span><br><span class="line">    afterfn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>); <span class="comment">// window调用afterfn</span></span><br><span class="line">    <span class="keyword">return</span> ret; <span class="comment">// [出口]返回func()的返回值</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> func = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"i am ret"</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">func = func</span><br><span class="line">  .before(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">  .after(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">func();</span><br></pre></td></tr></table></figure>
+<hr>
+<p>微博上一段子</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span> = <span class="built_in">Math</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">1</span>); <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+<p>还记得大明湖畔的对数吗</p>
+<hr>
+<p>Yiga 代码中的一段操作</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">    <span class="keyword">const</span> &#123; children, color, style, fontColor, ...props &#125; = <span class="keyword">this</span>.props</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        &lt;TouchableOpacity &#123;...props&#125;&gt;</span><br><span class="line">            &lt;View style=&#123;[styles.container, &#123; <span class="attr">background</span>: color &#125;, style]&#125;&gt;</span><br><span class="line">                &lt;Text style=&#123;[styles.text, &#123;<span class="attr">color</span>: fontColor&#125;]&#125;&gt;&#123; children &#125;&lt;<span class="regexp">/Text&gt;</span></span><br><span class="line"><span class="regexp">            &lt;/</span>View&gt;</span><br><span class="line">        &lt;<span class="regexp">/TouchableOpacity&gt;</span></span><br><span class="line"><span class="regexp">    )</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这段代码里<strong>剩余参数</strong>的用法可谓是解构赋值的非常骚的操作。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/04/09/祭一场飞蛾扑火/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -865,129 +998,6 @@
 <p>上大学之后在段猪家住了一段时间。这里省略一万字对段猪的感谢，虽然平时经常互损，但是一辈子能有几个像你这样的朋友，夫复何求。每天放学路上都能看到339，离活水公园非常近，所以活水公园变成了新的活动基地。有一次晚上和班长、家瑞他们几个在活水公园装鬼，吓得我到处乱跑结果把钱包玩丢了，连同着身份证、银行卡，回家一顿暴揍。和丹姐在活水公园里烧烟饼，被治理公园的保安轰了出去。<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/Zlq2RI1y2PWAwSNN3iE2UVy6tDvd2ZwZu.q1Aw8S92Y!/b/dGcBAAAAAAAA&amp;bo=KwewBCsHsAQRBzA!&amp;rf=viewer_4" alt="img"></p>
 <p>在哥哥家里住过一阵子，带着不四。不四是一只兔子，和抱抱的不三一起买回来的。当初希望这只兔子能如它的名字一样，拥有不死之身，可是它终究还是去了。不三死于寒冷，不四至今死因不明。天知道我有多想它。<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/XW0g5bwSmWESewzUF1bE7E6AJTK9pUERcrOVkAxXXmE!/b/dEABAAAAAAAA&amp;bo=XwY4BEATwAwRGdQ!&amp;rf=viewer_4" alt="img"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/5fWOPT*2WmlMu4mq9g2QwIy*STB7FalmoGN*cqrVTjQ!/b/dAgBAAAAAAAA&amp;bo=XwY4BEATwAwRKeQ!&amp;rf=viewer_4" alt="img"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/iVUdT7W.714F2j1tYC*NWEKbX785Tdtp7sMMfJDYE4g!/b/dEUBAAAAAAAA&amp;bo=XwY4BEATwAwRKeQ!&amp;rf=viewer_4" alt="img"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/d0.GVv7LZTVHehKq.IQRvB5hbdnQxa4fLQIiQUqzBgA!/b/dEUBAAAAAAAA&amp;bo=XwY4BEATwAwRGdQ!&amp;rf=viewer_4" alt="img"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/*natUsggHRkO8lx6Ym*lJyCK6QZba15.biuTxECjH.c!/b/dEABAAAAAAAA&amp;bo=XwY4BEATwAwRGdQ!&amp;rf=viewer_4" alt="img"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/XUhCetPFluyL07dHHGwz.JevCkE2hiTq*Xzm.*0*Sic!/b/dFsBAAAAAAAA&amp;bo=XwY4BEATwAwRGdQ!&amp;rf=viewer_4" alt="img"></p>
 <p>这么多年才悟懂这句话：「搬家之时，方知是流浪」。不过既来之则安之，心安之处，便是家。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/17/骚操作合集/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vickie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lucid Dream">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/17/骚操作合集/" itemprop="url">夕顔 | 骚操作合集</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-17T10:42:34+00:00">
-                2018-03-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>reducer里，如果我们想删除一项，进行如下操作。妈妈再也不用担心我拷贝对象了。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> removeQuestion = <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line"><span class="keyword">const</span> &#123; id &#125; = action.payload</span><br><span class="line"></span><br><span class="line"><span class="comment">// 正常操作</span></span><br><span class="line"><span class="keyword">const</span> newState = <span class="built_in">Object</span>.assign(&#123;&#125;, state)</span><br><span class="line"><span class="keyword">delete</span> newState[id]</span><br><span class="line"><span class="keyword">return</span> newState</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 骚操作</span></span><br><span class="line"><span class="keyword">return</span> <span class="function">(<span class="params">(&#123; [id]: deleted, ...newState &#125;</span>) =&gt;</span> newState)(state)</span><br></pre></td></tr></table></figure></p>
-<p>此处巧妙地运用解构赋值对对象的属性进行过滤。</p>
-<hr>
-<p>看高阶函数的时候对下面一段代码印象深刻。实在精妙。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.before = <span class="function"><span class="keyword">function</span>(<span class="params">beforefn</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> __self = <span class="keyword">this</span> <span class="comment">// this -&gt; func</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="comment">// this -&gt; window</span></span><br><span class="line">        beforefn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>) </span><br><span class="line">        <span class="keyword">return</span> __self.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>) <span class="comment">// 调用func 返回值为func()的返回值</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Function</span>.prototype.after = <span class="function"><span class="keyword">function</span>(<span class="params">afterfn</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> __self = <span class="keyword">this</span> <span class="comment">// this -&gt; 即调用 func.before返回的函数</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="comment">// [入口] this -&gt; window</span></span><br><span class="line">        <span class="keyword">const</span> ret = __self.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>) <span class="comment">// window调用 func.before返回的函数 ret为func()的返回值</span></span><br><span class="line">        afterfn.apply(<span class="keyword">this</span>, <span class="built_in">arguments</span>) <span class="comment">// window调用afterfn</span></span><br><span class="line">        <span class="keyword">return</span> ret <span class="comment">// [出口]返回func()的返回值</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> func = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'i am ret'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func = func.before(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">&#125;).after(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">func()</span><br></pre></td></tr></table></figure></p>
 
           
         
