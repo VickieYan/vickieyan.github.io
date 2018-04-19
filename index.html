@@ -389,6 +389,31 @@
 <p>DOMContentLoaded -&gt; load</p>
 <hr>
 <h2 id="浏览器缓存"><a href="#浏览器缓存" class="headerlink" title="浏览器缓存"></a>浏览器缓存</h2><p><a href="https://www.cnblogs.com/lyzg/p/5125934.html" target="_blank" rel="noopener">浏览器缓存知识小结及应用</a></p>
+<h3 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h3><p>命中缓存后返回 200。</p>
+<p>字段：</p>
+<ul>
+<li>expires</li>
+<li>cache-control</li>
+<li>pragma<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/an8Hh1QW*YwmQ*rdu3r7U9YXzbG5kfG*4aCTrz3G60E!/b/dEIBAAAAAAAA&amp;bo=LAPpAQAAAAADB.U!&amp;rf=viewer_4" alt="强缓存"></li>
+</ul>
+<p>要注意，强缓存通常都是针对静态资源使用，动态资源需要慎用。</p>
+<p>这里回溯一下之前项目中碰到的缓存问题。在之前的项目中发送 Ajax 请求时，我们通过了在请求的 URL 后面添加时间戳破缓存，这里解释一下原理。</p>
+<p>浏览器缓存是基于 url 进行缓存的，如果页面允许缓存，则在一定时间内（缓存时效时间前）再次访问相同的 URL，浏览器就不会再次发送请求到服务器端，而是直接从缓存中获取指定资源。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">axios.get(<span class="string">`/user/check?timestamp=<span class="subst">$&#123;<span class="keyword">new</span> <span class="built_in">Date</span>().getTime()&#125;</span>`</span>);</span><br></pre></td></tr></table></figure>
+<p>关于缓存更新请看这里：<a href="https://www.zhihu.com/question/20790576" target="_blank" rel="noopener">大公司里怎样开发和部署前端代码？</a></p>
+<h3 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h3><p>命中缓存后返回 304。</p>
+<p>字段：</p>
+<ul>
+<li>Last-Modified</li>
+<li>If-Modified-Since</li>
+</ul>
+<p>如果 Last-Modified 比 If-Modified-Since 晚，就从服务器端拉取数据</p>
+<ul>
+<li>ETag</li>
+<li>If-None-Match</li>
+</ul>
+<p>如果 If-None-Match 和 Etag 不一致时，从服务器端拉取数据</p>
+<p><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/RvrO8QgnWiz*cp5*cj9WG.euzrkilfsUaLzbGtJTNj8!/b/dPIAAAAAAAAA&amp;bo=BANYAgAAAAADB38!&amp;rf=viewer_4" alt="协商缓存"></p>
 
           
         
