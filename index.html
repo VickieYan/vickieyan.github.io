@@ -239,279 +239,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/04/17/就算是痴人说梦那又怎样/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vickie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lucid Dream">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/17/就算是痴人说梦那又怎样/" itemprop="url">夕顔 | 就算是痴人说梦那又怎样</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-17T15:04:32+00:00">
-                2018-04-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <center><h1>HTML</h1></center>
-
-<h2 id="元素分类"><a href="#元素分类" class="headerlink" title="元素分类"></a>元素分类</h2><ul>
-<li>行内元素(7)：a b(加粗) span img input selcet strong</li>
-<li>块级元素(9)：div ul ol li dl dt dd h1 p</li>
-<li>空元素(6)：br hr(直线) img input link meta</li>
-</ul>
-<hr>
-<h2 id="link-和-import-的区别"><a href="#link-和-import-的区别" class="headerlink" title="link 和 @import 的区别"></a>link 和 @import 的区别</h2><ul>
-<li>加载顺序（link 同时加载 @import 等页面加载完再加载）</li>
-<li>分类不同（link 是 XHTML 标签，除 CSS 还可加载其他文件 @import 由 css 提供，只能加载 css）</li>
-<li>兼容性（@import IE5 以上）</li>
-</ul>
-<hr>
-<center><h1>Web 综合</h1></center>
-
-<h2 id="介绍一下你对浏览器内核的理解？"><a href="#介绍一下你对浏览器内核的理解？" class="headerlink" title="介绍一下你对浏览器内核的理解？"></a>介绍一下你对浏览器内核的理解？</h2><p><a href="https://juejin.im/post/5a6547d0f265da3e283a1df7" target="_blank" rel="noopener">从浏览器多进程到 JS 单线程，JS 运行机制最全面的一次梳理</a></p>
-<h3 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h3><ul>
-<li>进程是 cpu 资源分配的最小单位</li>
-<li>线程是 cpu 调度的最小单位</li>
-</ul>
-<h3 id="浏览器是多进程的"><a href="#浏览器是多进程的" class="headerlink" title="浏览器是多进程的"></a>浏览器是多进程的</h3><p><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/KGJ*ub*P0OlFT9iNDSWPkqkDJEVOLTpcHwf40WPFxI8!/b/dDIBAAAAAAAA&amp;bo=WASaAlgEmgIDByI!&amp;rf=viewer_4" alt="浏览器"></p>
-<p>浏览器有以下几个进程：</p>
-<ol>
-<li>Browser 进程（主程）</li>
-</ol>
-<ul>
-<li>负责浏览器界面显示，与用户交互。如前进，后退等</li>
-<li>负责各个页面的管理，创建和销毁其他进程</li>
-<li>将 Renderer 进程得到的内存中的 Bitmap，绘制到用户界面上</li>
-<li>网络资源的管理，下载等</li>
-</ul>
-<ol>
-<li>第三方插件进程</li>
-<li>GPU 进程（3D 绘制）</li>
-<li>浏览器渲染进程 = 浏览器内核（每个 Tab 一个进程，多个空白页自动合并成一个进程。用于页面渲染、脚本运行、事件处理等）</li>
-</ol>
-<p>敲黑板，划重点，<strong>浏览器的渲染进程是多线程的</strong>。那么我们来看看它包括哪些线程。</p>
-<ol>
-<li>GUI 渲染线程（Graphical User Interface）</li>
-</ol>
-<ul>
-<li>负责渲染浏览器界面，解析 HTML，CSS，构建 DOM 树和 RenderObject 树，布局和绘制等。</li>
-<li>注意，<strong>GUI 渲染线程与 JS 引擎线程是互斥的</strong>，当 JS 引擎执行时 GUI 线程会被挂起（相当于被冻结了），GUI 更新会被保存在一个队列中等到 JS 引擎空闲时立即被执行。</li>
-</ul>
-<ol>
-<li>JS 引擎线程</li>
-</ol>
-<ul>
-<li>也称为 JS 内核，负责处理 Javascript 脚本程序。</li>
-</ul>
-<ol>
-<li>事件触发线程</li>
-<li>定时触发器线程</li>
-<li>异步 http 请求线程</li>
-</ol>
-<hr>
-<h2 id="从打开浏览器到页面渲染的过程"><a href="#从打开浏览器到页面渲染的过程" class="headerlink" title="从打开浏览器到页面渲染的过程"></a>从打开浏览器到页面渲染的过程</h2><p><a href="https://blog.csdn.net/crystal6918/article/details/55190555" target="_blank" rel="noopener">从输入一个 url 后到页面加载完成都发生了什么</a></p>
-<p><a href="http://zining.me/2017/07/13/how-it-works-when-enter-a-url/" target="_blank" rel="noopener">从输入 url 到页面加载发生了什么 –Jason 哥</a></p>
-<p><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/aNXyz9JQ.4E.VXpNQOCpr5hhZbPuG0unGonIzR8a8uw!/b/dJEAAAAAAAAA&amp;bo=VAY4BL4HKQUDCdc!&amp;rf=viewer_4" alt="渲染过程"></p>
-<p><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/4WWkRFfOasiVJRaGA0d6o8lLqQAoCSg0kCFYlcd2c9c!/b/dDMBAAAAAAAA&amp;bo=pAQBA6QEAQMRBzA!&amp;rf=viewer_4" alt="DNS查询过程"></p>
-<ol>
-<li>用户输入 URL</li>
-<li>判断是否命中强缓存，若命中，直接返回缓存资源。</li>
-<li>开始 DNS 解析，详细过程参考<a href="https://blog.csdn.net/crystal6918/article/details/55190555" target="_blank" rel="noopener">从输入一个 url 后到页面加载完成都发生了什么</a></li>
-<li>建立 TCP 连接（三次握手）</li>
-<li>TCP 建立完成后发送 HTTP 请求</li>
-<li>服务器接受请求并解析，如果头部有缓存相关信息如 if-none-match 与 if-modified-since，则验证缓存是否有效，若有效则返回 304</li>
-<li>服务器将响应报文通过 TCP 连接发送回浏览器</li>
-<li>浏览器接收响应，并关闭 TCP 连接（四次挥手）</li>
-<li>浏览器检查状态码并进行对应操作</li>
-<li>Browser 进程收到用户请求，首先需要获取页面内容（譬如通过网络下载资源），随后将该任务通过 RendererHost 接口传递给 Render 进程</li>
-<li>Renderer 进程的 Renderer 接口收到消息，简单解释后，交给渲染线程，然后开始渲染</li>
-<li>解析 html 建立 dom 树</li>
-<li>解析 css 构建 render 树（将 CSS 代码解析成树形的数据结构，然后结合 DOM 合并成 render 树）</li>
-<li>布局 render 树（Layout/reflow），负责各元素尺寸、位置的计算</li>
-<li>绘制 render 树（paint），绘制页面像素信息</li>
-<li>浏览器会将各层的信息发送给 GPU，GPU 会将各层合成（composite），显示在屏幕上。</li>
-</ol>
-<hr>
-<h2 id="TCP-三次握手和四次挥手"><a href="#TCP-三次握手和四次挥手" class="headerlink" title="TCP 三次握手和四次挥手"></a>TCP 三次握手和四次挥手</h2><p><a href="https://juejin.im/post/5a7835a46fb9a063606eb801" target="_blank" rel="noopener">图解 TCP 三次握手与四次分手</a></p>
-<p><a href="https://blog.csdn.net/ns_code/article/details/29382883" target="_blank" rel="noopener">TCP 连接的建立和释放</a></p>
-<p>首先我们来看看 TCP 的报文里都有哪些字段。</p>
-<p><a href="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/SiMINktkHgw*QavvhLkHckJaSDF9nRtWjZly9wYgUIA!/b/dGoBAAAAAAAA&amp;bo=7wLMAe8CzAEDCSw!&amp;rf=viewer_4" target="_blank" rel="noopener">TCP 报文</a></p>
-<p>下面我们来分别解释一下在连接中我们使用到的字段分别代表什么意思：</p>
-<ul>
-<li>SYN: 同步序号(synchronous)，用来发起一个连接。当 SYN=1 而 ACK=0 时，表明这是一个连接请求报文段，若对方同意建立连接，则应在响应的报文段中使 SYN=1 和 ACK=1。</li>
-<li>ACK: 确认字符(acknowledgement)，仅当 ACK=1 时确认号字段才有效，当 ACK=0 时，确认号无效。TCP 规定，在连接建立后所有的传送报文段都必须把 ACK 置 1。</li>
-</ul>
-<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/kW1TdTsjqlaKqH0nsti5RHwl1ovZhK6vFK4Ys.SC.0I!/b/dEUBAAAAAAAA&amp;bo=9AOzAvQDswIDCSw!&amp;rf=viewer_4" alt="三次握手"></p>
-<ul>
-<li><p>第一次握手：客户端的 TCP 进程首先创建传输控制模块 TCB，然后向服务端发出连接请求报文段，该报文段首部中的 <strong>SYN=1，ACK=0</strong>，同时选择一个初始序号 <strong>seq=i</strong>。TCP 规定，SYN=1 的报文段不能携带数据，但要消耗掉一个序号。这时，TCP 客户进程进入 <strong>SYN—SENT（同步已发送）状态</strong>，这是 TCP 连接的第一次握手。</p>
-</li>
-<li><p>第二次握手：服务端收到客户端发来的请求报文后，如果同意建立连接，则向客户端发送确认。确认报文中的 <strong>SYN=1，ACK=1</strong>，确认号 ack=i+1，同时为自己选择一个初始序号 <strong>seq=j</strong>。同样该报文段也是 SYN=1 的报文段，不能携带数据，但同样要消耗掉一个序号。这时，TCP 服务端进入 <strong>SYN—RCVD（同步收到）状态</strong>，这是 TCP 连接的第二次握手。</p>
-</li>
-<li><p>第三次握手：TCP 客户端进程收到服务端进程的确认后，还要向服务端给出确认。确认报文段的 <strong>ACK=1</strong>，确认号 <strong>ack=j+1</strong>，而自己的序号为 <strong>seq=i+1</strong>。TCP 的标准规定，ACK 报文段可以携带数据，但如果不携带数据则不消耗序号，因此，如果不携带数据，则下一个报文段的序号仍为 seq=i+1。这时，TCP 连接已经建立，客户端进入 <strong>ESTABLISHED（已建立连接）状态</strong>。这是 TCP 连接的第三次握手，可以看出第三次握手客户端已经可以发送携带数据的报文段了。</p>
-</li>
-</ul>
-<p>知乎上一生动的段子：</p>
-<blockquote>
-<ul>
-<li>第一次握手：约吗</li>
-<li>第二次握手：约</li>
-<li>第三次握手：那我出发了</li>
-</ul>
-</blockquote>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><img src="https://user-gold-cdn.xitu.io/2018/2/5/1616591831ac99e0?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="四次挥手"></p>
-<h2 id="浏览器缓存"><a href="#浏览器缓存" class="headerlink" title="浏览器缓存"></a>浏览器缓存</h2><p><a href="https://www.cnblogs.com/lyzg/p/5125934.html" target="_blank" rel="noopener">浏览器缓存知识小结及应用</a></p>
-<h3 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h3><p>命中缓存后返回 200。</p>
-<p>字段：</p>
-<ul>
-<li>expires</li>
-<li>cache-control</li>
-</ul>
-<p>禁止缓存：Cache-Control: no-cache, no-store, must-revalidate</p>
-<p>缓存静态资源 Cache-Control:public, max-age=31536000</p>
-<ul>
-<li>pragma</li>
-</ul>
-<p>建议只在需要兼容 HTTP/1.0 客户端的场合下应用 Pragma 首部。</p>
-<p><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/an8Hh1QW*YwmQ*rdu3r7U9YXzbG5kfG*4aCTrz3G60E!/b/dEIBAAAAAAAA&amp;bo=LAPpAQAAAAADB.U!&amp;rf=viewer_4" alt="强缓存"></p>
-<p>要注意，强缓存通常都是针对静态资源使用，动态资源需要慎用。</p>
-<p>这里回溯一下之前项目中碰到的缓存问题。在之前的项目中发送 Ajax 请求时，我们通过了在请求的 URL 后面添加时间戳破缓存，这里解释一下原理。</p>
-<p>浏览器缓存是基于 url 进行缓存的，如果页面允许缓存，则在一定时间内（缓存时效时间前）再次访问相同的 URL，浏览器就不会再次发送请求到服务器端，而是直接从缓存中获取指定资源。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">axios.get(<span class="string">`/user/check?timestamp=<span class="subst">$&#123;<span class="keyword">new</span> <span class="built_in">Date</span>().getTime()&#125;</span>`</span>);</span><br></pre></td></tr></table></figure>
-<p>关于缓存更新请看这里：<a href="https://www.zhihu.com/question/20790576" target="_blank" rel="noopener">大公司里怎样开发和部署前端代码？</a></p>
-<h3 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h3><p>命中缓存后返回 304。</p>
-<p>字段：</p>
-<ul>
-<li>Last-Modified</li>
-<li>If-Modified-Since</li>
-</ul>
-<p>如果 Last-Modified 比 If-Modified-Since 晚，就从服务器端拉取数据</p>
-<ul>
-<li>ETag</li>
-<li>If-None-Match</li>
-</ul>
-<p>如果 If-None-Match 和 Etag 不一致时，从服务器端拉取数据</p>
-<p><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/RvrO8QgnWiz*cp5*cj9WG.euzrkilfsUaLzbGtJTNj8!/b/dPIAAAAAAAAA&amp;bo=BANYAgAAAAADB38!&amp;rf=viewer_4" alt="协商缓存"></p>
-<h3 id="浏览器行为对缓存的影响"><a href="#浏览器行为对缓存的影响" class="headerlink" title="浏览器行为对缓存的影响"></a>浏览器行为对缓存的影响</h3><ol>
-<li><p>当 ctrl+f5 强制刷新网页时，直接从服务器加载，跳过强缓存和协商缓存；</p>
-</li>
-<li><p>当 f5 刷新网页时，跳过强缓存，但是会检查协商缓存；</p>
-</li>
-</ol>
-<hr>
-<h2 id="load-事件和-DOMContentLoaded-事件的先后"><a href="#load-事件和-DOMContentLoaded-事件的先后" class="headerlink" title="load 事件和 DOMContentLoaded 事件的先后"></a>load 事件和 DOMContentLoaded 事件的先后</h2><ul>
-<li><p>当 DOMContentLoaded 事件触发时，仅当 DOM 加载完成，不包括样式表，图片。 (譬如如果有 async 加载的脚本就不一定完成)</p>
-</li>
-<li><p>当 onload 事件触发时，页面上所有的 DOM，样式表，脚本，图片都已经加载完成了。 （渲染完毕了）</p>
-</li>
-</ul>
-<p>DOMContentLoaded -&gt; load</p>
-<hr>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/04/16/启吾东疆/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1689,6 +1416,127 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/12/你住的城市会有我的思念因子/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/12/你住的城市会有我的思念因子/" itemprop="url">空蝉 | 你住的城市会有我的思念因子</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-12T22:05:38+00:00">
+                2018-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>《遇见》<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/LH.8yIiV*gpc0yfQiz1xt3mZupkJtd9gGhK93Zu7Roo!/b/dMgAAAAAAAAA&amp;bo=4gY4BCQJmgUDSQY!&amp;rf=viewer_4" alt="avatar"></p>
+<p>《追梦赤子心》<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/c7PAVWkNd3f9smweUq381yutPZFRsdNp2Fwff9VCCvQ!/b/dFYBAAAAAAAA&amp;bo=fgY4BKQJRAYDCYc!&amp;rf=viewer_4" alt="avatar"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1739,7 +1587,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
