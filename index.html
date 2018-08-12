@@ -321,21 +321,451 @@
 
 <center>若紫（わかむらさき） | 曾经拥有过的纪念</center>
 
-<center>帚木（ははきぎ） | 解决选择困难症的万事屋</center>
-
 <center>空蝉（うつせみ） | 少女无处安放的脑洞</center>
 
 <center>夕顔（ゆうがお） | 编程日常</center>
 
 <center>花宴（はなのえん） | 新一代中华小当家的成长历程</center>
 
-<center>葵（あおい） | 老漂日记（持续更新中）</center>
+<center>葵（あおい） | 如果漂泊是成长必经的路牌</center>
+
+<center>花散里（はなちるさと） | 解决选择困难症的万事屋</center>
 
 <center>蛍（ほたる）| 地球环游记</center>
 
 <center>浮舟（うきふね） | 摄影成长记</center>
 
-<center>京城记 | 颜小姐在北京</center>
+<center>京城记 | 北京环游计划</center>
+
+<center>孤独星球 | Lonely Planet阅读笔记</center>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/07/31/Vue源码解读/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/31/Vue源码解读/" itemprop="url">夕顔 | Vue源码解读</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-31T17:37:22+00:00">
+                2018-07-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>千回百转还是入了Vue的坑。</p>
+<p>以下是每天和睡魔抗争扒出来的Vue源码的血泪史。</p>
+<h1 id="故事从一片落叶开始"><a href="#故事从一片落叶开始" class="headerlink" title="故事从一片落叶开始"></a>故事从一片落叶开始</h1><p>让我们回到万物始初，来看看我们是怎么创建一个Vue实例的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  router,</span><br><span class="line">  components: &#123; App &#125;,</span><br><span class="line">  template: <span class="string">'&lt;App/&gt;'</span>,</span><br><span class="line">  store,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'./instance/index'</span></span><br><span class="line"><span class="keyword">import</span> &#123; initGlobalAPI &#125; <span class="keyword">from</span> <span class="string">'./global-api/index'</span></span><br><span class="line"><span class="keyword">import</span> &#123; isServerRendering &#125; <span class="keyword">from</span> <span class="string">'core/util/env'</span></span><br><span class="line"><span class="keyword">import</span> &#123; FunctionalRenderContext &#125; <span class="keyword">from</span> <span class="string">'core/vdom/create-functional-component'</span></span><br><span class="line"></span><br><span class="line">initGlobalAPI(Vue)</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(Vue.prototype, <span class="string">'$isServer'</span>, &#123;</span><br><span class="line">  get: isServerRendering</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(Vue.prototype, <span class="string">'$ssrContext'</span>, &#123;</span><br><span class="line">  get () &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.$vnode &amp;&amp; <span class="keyword">this</span>.$vnode.ssrContext</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(Vue, <span class="string">'FunctionalRenderContext'</span>, &#123;</span><br><span class="line">  value: FunctionalRenderContext</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">Vue.version = <span class="string">'__VERSION__'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Vue</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Vue</span> (<span class="params">options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp;</span><br><span class="line">    !(<span class="keyword">this</span> <span class="keyword">instanceof</span> Vue)</span><br><span class="line">  ) &#123;</span><br><span class="line">    warn(<span class="string">'Vue is a constructor and should be called with the `new` keyword'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">this</span>._init(options)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Instance"><a href="#Instance" class="headerlink" title="Instance"></a>Instance</h2><h3 id="initMixin"><a href="#initMixin" class="headerlink" title="initMixin"></a>initMixin</h3><p>进入这个函数只干了一件事，那便是<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">```javascript</span><br><span class="line">function initMixin (Vue: Class&lt;Component&gt;) &#123;</span><br><span class="line">  Vue.prototype._init = function (options?: Object) &#123;</span><br><span class="line">    const vm: Component = this</span><br><span class="line">    vm._uid = uid++</span><br><span class="line">	// 目测是提供给performance优化性能的参数</span><br><span class="line">    let startTag, endTag</span><br><span class="line">    if (process.env.NODE_ENV !== &apos;production&apos; &amp;&amp; config.performance &amp;&amp; mark) &#123;</span><br><span class="line">      startTag = `vue-perf-start:$&#123;vm._uid&#125;`</span><br><span class="line">      endTag = `vue-perf-end:$&#123;vm._uid&#125;`</span><br><span class="line">      mark(startTag)</span><br><span class="line">    &#125;</span><br><span class="line">    vm._isVue = true</span><br><span class="line">    if (options &amp;&amp; options._isComponent) &#123;</span><br><span class="line">      initInternalComponent(vm, options)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      vm.$options = mergeOptions(</span><br><span class="line">        resolveConstructorOptions(vm.constructor),</span><br><span class="line">        options || &#123;&#125;,</span><br><span class="line">        vm</span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">    /* istanbul ignore else */</span><br><span class="line">    if (process.env.NODE_ENV !== &apos;production&apos;) &#123;</span><br><span class="line">      initProxy(vm)</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      vm._renderProxy = vm</span><br><span class="line">    &#125;</span><br><span class="line">    // expose real self</span><br><span class="line">    vm._self = vm</span><br><span class="line">    initLifecycle(vm)</span><br><span class="line">    initEvents(vm)</span><br><span class="line">    initRender(vm)</span><br><span class="line">    callHook(vm, &apos;beforeCreate&apos;)</span><br><span class="line">    initInjections(vm) // resolve injections before data/props</span><br><span class="line">    initState(vm)</span><br><span class="line">    initProvide(vm) // resolve provide after data/props</span><br><span class="line">    callHook(vm, &apos;created&apos;)</span><br><span class="line"></span><br><span class="line">    /* istanbul ignore if */</span><br><span class="line">    if (process.env.NODE_ENV !== &apos;production&apos; &amp;&amp; config.performance &amp;&amp; mark) &#123;</span><br><span class="line">      vm._name = formatComponentName(vm, false)</span><br><span class="line">      mark(endTag)</span><br><span class="line">      measure(`vue $&#123;vm._name&#125; init`, startTag, endTag)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    if (vm.$options.el) &#123;</span><br><span class="line">      vm.$mount(vm.$options.el)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="resolveConstructorOptions"><a href="#resolveConstructorOptions" class="headerlink" title="resolveConstructorOptions"></a>resolveConstructorOptions</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">resolveConstructorOptions</span> (<span class="params">Ctor: Class&lt;Component&gt;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> options = Ctor.options <span class="comment">// 在initGlobalAPI中初始化的options</span></span><br><span class="line">  <span class="keyword">if</span> (Ctor.super) &#123;</span><br><span class="line">    <span class="keyword">const</span> superOptions = resolveConstructorOptions(Ctor.super)</span><br><span class="line">    <span class="keyword">const</span> cachedSuperOptions = Ctor.superOptions</span><br><span class="line">    <span class="keyword">if</span> (superOptions !== cachedSuperOptions) &#123;</span><br><span class="line">      <span class="comment">// super option changed,</span></span><br><span class="line">      <span class="comment">// need to resolve new options.</span></span><br><span class="line">      Ctor.superOptions = superOptions</span><br><span class="line">      <span class="comment">// check if there are any late-modified/attached options (#4976)</span></span><br><span class="line">      <span class="keyword">const</span> modifiedOptions = resolveModifiedOptions(Ctor)</span><br><span class="line">      <span class="comment">// update base extend options</span></span><br><span class="line">      <span class="keyword">if</span> (modifiedOptions) &#123;</span><br><span class="line">        extend(Ctor.extendOptions, modifiedOptions)</span><br><span class="line">      &#125;</span><br><span class="line">      options = Ctor.options = mergeOptions(superOptions, Ctor.extendOptions)</span><br><span class="line">      <span class="keyword">if</span> (options.name) &#123;</span><br><span class="line">        options.components[options.name] = Ctor</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> options</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="mergeOptions"><a href="#mergeOptions" class="headerlink" title="mergeOptions"></a>mergeOptions</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mergeOptions</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  parent: Object,</span></span></span><br><span class="line"><span class="function"><span class="params">  child: Object,</span></span></span><br><span class="line"><span class="function"><span class="params">  vm?: Component</span></span></span><br><span class="line"><span class="function"><span class="params"></span>): <span class="title">Object</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 判断组件是否符合规范</span></span><br><span class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">    checkComponents(child)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> child === <span class="string">'function'</span>) &#123;</span><br><span class="line">    child = child.options</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 第一次进入时都完美跳过</span></span><br><span class="line">  normalizeProps(child, vm)</span><br><span class="line">  normalizeInject(child, vm)</span><br><span class="line">  normalizeDirectives(child)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">const</span> extendsFrom = child.extends</span><br><span class="line">  <span class="keyword">if</span> (extendsFrom) &#123;</span><br><span class="line">    parent = mergeOptions(parent, extendsFrom, vm)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (child.mixins) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = child.mixins.length; i &lt; l; i++) &#123;</span><br><span class="line">      parent = mergeOptions(parent, child.mixins[i], vm)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> options = &#123;&#125;</span><br><span class="line">  <span class="keyword">let</span> key</span><br><span class="line">  <span class="keyword">for</span> (key <span class="keyword">in</span> parent) &#123;</span><br><span class="line">    mergeField(key)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (key <span class="keyword">in</span> child) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!hasOwn(parent, key)) &#123;</span><br><span class="line">      mergeField(key)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">mergeField</span> (<span class="params">key</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> strat = strats[key] || defaultStrat</span><br><span class="line">    options[key] = strat(parent[key], child[key], vm, key)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> options</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="checkComponents"><a href="#checkComponents" class="headerlink" title="checkComponents"></a>checkComponents</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkComponents</span> (<span class="params">options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> options.components) &#123;</span><br><span class="line">    validateComponentName(key);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">validateComponentName</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="regexp">/^[a-zA-Z][\w-]*$/</span>.test(name)) &#123;</span><br><span class="line">    warn(</span><br><span class="line">      <span class="string">'Invalid component name: "'</span> + name + <span class="string">'". Component names '</span> +</span><br><span class="line">      <span class="string">'can only contain alphanumeric characters and the hyphen, '</span> +</span><br><span class="line">      <span class="string">'and must start with a letter.'</span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (isBuiltInTag(name) || config.isReservedTag(name)) &#123;</span><br><span class="line">    warn(</span><br><span class="line">      <span class="string">'Do not use built-in or reserved HTML elements as component '</span> +</span><br><span class="line">      <span class="string">'id: '</span> + name</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="nomalizeProps"><a href="#nomalizeProps" class="headerlink" title="nomalizeProps"></a>nomalizeProps</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">normalizeProps</span> (<span class="params">options: Object, vm: ?Component</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> props = options.props</span><br><span class="line">  <span class="keyword">if</span> (!props) <span class="keyword">return</span> <span class="comment">// 第一次进来从这里就返回啦</span></span><br><span class="line">  <span class="keyword">const</span> res = &#123;&#125;</span><br><span class="line">  <span class="keyword">let</span> i, val, name</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(props)) &#123;</span><br><span class="line">    i = props.length</span><br><span class="line">    <span class="keyword">while</span> (i--) &#123;</span><br><span class="line">      val = props[i]</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> val === <span class="string">'string'</span>) &#123;</span><br><span class="line">        name = camelize(val)</span><br><span class="line">        res[name] = &#123; <span class="attr">type</span>: <span class="literal">null</span> &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">        warn(<span class="string">'props must be strings when using array syntax.'</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isPlainObject(props)) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> props) &#123;</span><br><span class="line">      val = props[key]</span><br><span class="line">      name = camelize(key)</span><br><span class="line">      res[name] = isPlainObject(val)</span><br><span class="line">        ? val</span><br><span class="line">        : &#123; <span class="attr">type</span>: val &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">    warn(</span><br><span class="line">      <span class="string">`Invalid value for option "props": expected an Array or an Object, `</span> +</span><br><span class="line">      <span class="string">`but got <span class="subst">$&#123;toRawType(props)&#125;</span>.`</span>,</span><br><span class="line">      vm</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">  options.props = res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="normalizeInject"><a href="#normalizeInject" class="headerlink" title="normalizeInject"></a>normalizeInject</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">normalizeInject</span> (<span class="params">options: Object, vm: ?Component</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> inject = options.inject</span><br><span class="line">  <span class="keyword">if</span> (!inject) <span class="keyword">return</span>  <span class="comment">// 又从这里溜啦</span></span><br><span class="line">  <span class="keyword">const</span> normalized = options.inject = &#123;&#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(inject)) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; inject.length; i++) &#123;</span><br><span class="line">      normalized[inject[i]] = &#123; <span class="attr">from</span>: inject[i] &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isPlainObject(inject)) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> inject) &#123;</span><br><span class="line">      <span class="keyword">const</span> val = inject[key]</span><br><span class="line">      normalized[key] = isPlainObject(val)</span><br><span class="line">        ? extend(&#123; <span class="attr">from</span>: key &#125;, val)</span><br><span class="line">        : &#123; <span class="attr">from</span>: val &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">    warn(</span><br><span class="line">      <span class="string">`Invalid value for option "inject": expected an Array or an Object, `</span> +</span><br><span class="line">      <span class="string">`but got <span class="subst">$&#123;toRawType(inject)&#125;</span>.`</span>,</span><br><span class="line">      vm</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="normalizeDirectives"><a href="#normalizeDirectives" class="headerlink" title="normalizeDirectives"></a>normalizeDirectives</h5><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">normalizeDirectives</span> (<span class="params">options: Object</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> dirs = options.directives</span><br><span class="line">  <span class="keyword">if</span> (dirs) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> dirs) &#123;</span><br><span class="line">      <span class="keyword">const</span> def = dirs[key]</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> def === <span class="string">'function'</span>) &#123;</span><br><span class="line">        dirs[key] = &#123; <span class="attr">bind</span>: def, <span class="attr">update</span>: def &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="stateMixin"><a href="#stateMixin" class="headerlink" title="stateMixin"></a>stateMixin</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">stateMixin</span> (<span class="params">Vue: Class&lt;Component&gt;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> dataDef = &#123;&#125;</span><br><span class="line">  dataDef.get = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>._data &#125;</span><br><span class="line">  <span class="keyword">const</span> propsDef = &#123;&#125;</span><br><span class="line">  propsDef.get = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>._props &#125;</span><br><span class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">    <span class="comment">// $data和$props均不可直接修改</span></span><br><span class="line">    dataDef.set = <span class="function"><span class="keyword">function</span> (<span class="params">newData: Object</span>) </span>&#123;</span><br><span class="line">      warn(</span><br><span class="line">        <span class="string">'Avoid replacing instance root $data. '</span> +</span><br><span class="line">        <span class="string">'Use nested data properties instead.'</span>,</span><br><span class="line">        <span class="keyword">this</span></span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">    propsDef.set = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      warn(<span class="string">`$props is readonly.`</span>, <span class="keyword">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// Vue.prototype.$data  get方法访问this._data</span></span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(Vue.prototype, <span class="string">'$data'</span>, dataDef)</span><br><span class="line">  <span class="comment">// Vue.prototype.$props  get方法访问this.props</span></span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(Vue.prototype, <span class="string">'$props'</span>, propsDef)</span><br><span class="line">  </span><br><span class="line">  Vue.prototype.$set = set</span><br><span class="line">  </span><br><span class="line">  Vue.prototype.$<span class="keyword">delete</span> = del</span><br><span class="line">  </span><br><span class="line">  Vue.prototype.$watch = <span class="function"><span class="keyword">function</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">    expOrFn: string | Function,</span></span></span><br><span class="line"><span class="function"><span class="params">    cb: any,</span></span></span><br><span class="line"><span class="function"><span class="params">    options?: Object</span></span></span><br><span class="line"><span class="function"><span class="params">  </span>): <span class="title">Function</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></span><br><span class="line">    <span class="keyword">if</span> (isPlainObject(cb)) &#123;</span><br><span class="line">      <span class="keyword">return</span> createWatcher(vm, expOrFn, cb, options)</span><br><span class="line">    &#125;</span><br><span class="line">    options = options || &#123;&#125;</span><br><span class="line">    options.user = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">const</span> watcher = <span class="keyword">new</span> Watcher(vm, expOrFn, cb, options)</span><br><span class="line">    <span class="keyword">if</span> (options.immediate) &#123;</span><br><span class="line">      cb.call(vm, watcher.value)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">unwatchFn</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      watcher.teardown()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码中提到的set和del方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">set</span> (<span class="params">target: Array&lt;any&gt; | Object, key: any, val: any</span>): <span class="title">any</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp;</span><br><span class="line">    (isUndef(target) || isPrimitive(target))</span><br><span class="line">  ) &#123;</span><br><span class="line">    warn(<span class="string">`Cannot set reactive property on undefined, null, or primitive value: <span class="subst">$&#123;(target: any)&#125;</span>`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(target) &amp;&amp; isValidArrayIndex(key)) &#123;</span><br><span class="line">    target.length = <span class="built_in">Math</span>.max(target.length, key)</span><br><span class="line">    target.splice(key, <span class="number">1</span>, val)</span><br><span class="line">    <span class="keyword">return</span> val</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (key <span class="keyword">in</span> target &amp;&amp; !(key <span class="keyword">in</span> <span class="built_in">Object</span>.prototype)) &#123;</span><br><span class="line">    target[key] = val</span><br><span class="line">    <span class="keyword">return</span> val</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> ob = (target: any).__ob__</span><br><span class="line">  <span class="keyword">if</span> (target._isVue || (ob &amp;&amp; ob.vmCount)) &#123;</span><br><span class="line">    process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; warn(</span><br><span class="line">      <span class="string">'Avoid adding reactive properties to a Vue instance or its root $data '</span> +</span><br><span class="line">      <span class="string">'at runtime - declare it upfront in the data option.'</span></span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span> val</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (!ob) &#123;</span><br><span class="line">    target[key] = val</span><br><span class="line">    <span class="keyword">return</span> val</span><br><span class="line">  &#125;</span><br><span class="line">  defineReactive(ob.value, key, val)</span><br><span class="line">  ob.dep.notify()</span><br><span class="line">  <span class="keyword">return</span> val</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">del</span> (<span class="params">target: Array&lt;any&gt; | Object, key: any</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp;</span><br><span class="line">    (isUndef(target) || isPrimitive(target))</span><br><span class="line">  ) &#123;</span><br><span class="line">    warn(<span class="string">`Cannot delete reactive property on undefined, null, or primitive value: <span class="subst">$&#123;(target: any)&#125;</span>`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(target) &amp;&amp; isValidArrayIndex(key)) &#123;</span><br><span class="line">    target.splice(key, <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> ob = (target: any).__ob__</span><br><span class="line">  <span class="keyword">if</span> (target._isVue || (ob &amp;&amp; ob.vmCount)) &#123;</span><br><span class="line">    process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; warn(</span><br><span class="line">      <span class="string">'Avoid deleting properties on a Vue instance or its root $data '</span> +</span><br><span class="line">      <span class="string">'- just set it to null.'</span></span><br><span class="line">    )</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (!hasOwn(target, key)) &#123;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">delete</span> target[key]</span><br><span class="line">  <span class="keyword">if</span> (!ob) &#123;</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  ob.dep.notify()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="eventsMixin"><a href="#eventsMixin" class="headerlink" title="eventsMixin"></a>eventsMixin</h3><ul>
+<li>$on</li>
+<li>$once</li>
+<li>$off</li>
+<li>$emit</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">eventsMixin</span> (<span class="params">Vue: Class&lt;Component&gt;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> hookRE = <span class="regexp">/^hook:/</span></span><br><span class="line">  Vue.prototype.$on = <span class="function"><span class="keyword">function</span> (<span class="params">event: string | Array&lt;string&gt;, fn: Function</span>): <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(event)) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = event.length; i &lt; l; i++) &#123;</span><br><span class="line">        <span class="keyword">this</span>.$on(event[i], fn)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      (vm._events[event] || (vm._events[event] = [])).push(fn)</span><br><span class="line">      <span class="keyword">if</span> (hookRE.test(event)) &#123;</span><br><span class="line">        vm._hasHookEvent = <span class="literal">true</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> vm</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Vue.prototype.$once = <span class="function"><span class="keyword">function</span> (<span class="params">event: string, fn: Function</span>): <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">on</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      vm.$off(event, on)</span><br><span class="line">      fn.apply(vm, <span class="built_in">arguments</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    on.fn = fn</span><br><span class="line">    vm.$on(event, on)</span><br><span class="line">    <span class="keyword">return</span> vm</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Vue.prototype.$off = <span class="function"><span class="keyword">function</span> (<span class="params">event?: string | Array&lt;string&gt;, fn?: Function</span>): <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></span><br><span class="line">    <span class="comment">// all</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">arguments</span>.length) &#123;</span><br><span class="line">      vm._events = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</span><br><span class="line">      <span class="keyword">return</span> vm</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// array of events</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(event)) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = event.length; i &lt; l; i++) &#123;</span><br><span class="line">        <span class="keyword">this</span>.$off(event[i], fn)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> vm</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// specific event</span></span><br><span class="line">    <span class="keyword">const</span> cbs = vm._events[event]</span><br><span class="line">    <span class="keyword">if</span> (!cbs) &#123;</span><br><span class="line">      <span class="keyword">return</span> vm</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!fn) &#123;</span><br><span class="line">      vm._events[event] = <span class="literal">null</span></span><br><span class="line">      <span class="keyword">return</span> vm</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (fn) &#123;</span><br><span class="line">      <span class="comment">// specific handler</span></span><br><span class="line">      <span class="keyword">let</span> cb</span><br><span class="line">      <span class="keyword">let</span> i = cbs.length</span><br><span class="line">      <span class="keyword">while</span> (i--) &#123;</span><br><span class="line">        cb = cbs[i]</span><br><span class="line">        <span class="keyword">if</span> (cb === fn || cb.fn === fn) &#123;</span><br><span class="line">          cbs.splice(i, <span class="number">1</span>)</span><br><span class="line">          <span class="keyword">break</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> vm</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Vue.prototype.$emit = <span class="function"><span class="keyword">function</span> (<span class="params">event: string</span>): <span class="title">Component</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></span><br><span class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> lowerCaseEvent = event.toLowerCase()</span><br><span class="line">      <span class="keyword">if</span> (lowerCaseEvent !== event &amp;&amp; vm._events[lowerCaseEvent]) &#123;</span><br><span class="line">        tip(</span><br><span class="line">          <span class="string">`Event "<span class="subst">$&#123;lowerCaseEvent&#125;</span>" is emitted in component `</span> +</span><br><span class="line">          <span class="string">`<span class="subst">$&#123;formatComponentName(vm)&#125;</span> but the handler is registered for "<span class="subst">$&#123;event&#125;</span>". `</span> +</span><br><span class="line">          <span class="string">`Note that HTML attributes are case-insensitive and you cannot use `</span> +</span><br><span class="line">          <span class="string">`v-on to listen to camelCase events when using in-DOM templates. `</span> +</span><br><span class="line">          <span class="string">`You should probably use "<span class="subst">$&#123;hyphenate(event)&#125;</span>" instead of "<span class="subst">$&#123;event&#125;</span>".`</span></span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> cbs = vm._events[event]</span><br><span class="line">    <span class="keyword">if</span> (cbs) &#123;</span><br><span class="line">      cbs = cbs.length &gt; <span class="number">1</span> ? toArray(cbs) : cbs</span><br><span class="line">      <span class="keyword">const</span> args = toArray(<span class="built_in">arguments</span>, <span class="number">1</span>)</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, l = cbs.length; i &lt; l; i++) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">          cbs[i].apply(vm, args)</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">          handleError(e, vm, <span class="string">`event handler for "<span class="subst">$&#123;event&#125;</span>"`</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> vm</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="lifecycleMixin"><a href="#lifecycleMixin" class="headerlink" title="lifecycleMixin"></a>lifecycleMixin</h3><ul>
+<li>_update</li>
+<li>.$forceUpdate</li>
+<li>$destroy</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">lifecycleMixin</span> (<span class="params">Vue: Class&lt;Component&gt;</span>) </span>&#123;</span><br><span class="line">  Vue.prototype._update = <span class="function"><span class="keyword">function</span> (<span class="params">vnode: VNode, hydrating?: boolean</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></span><br><span class="line">    <span class="keyword">const</span> prevEl = vm.$el</span><br><span class="line">    <span class="keyword">const</span> prevVnode = vm._vnode</span><br><span class="line">    <span class="keyword">const</span> prevActiveInstance = activeInstance</span><br><span class="line">    activeInstance = vm</span><br><span class="line">    vm._vnode = vnode</span><br><span class="line">    <span class="comment">// Vue.prototype.__patch__ is injected in entry points</span></span><br><span class="line">    <span class="comment">// based on the rendering backend used.</span></span><br><span class="line">    <span class="keyword">if</span> (!prevVnode) &#123;</span><br><span class="line">      <span class="comment">// initial render</span></span><br><span class="line">      vm.$el = vm.__patch__(vm.$el, vnode, hydrating, <span class="literal">false</span> <span class="comment">/* removeOnly */</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// updates</span></span><br><span class="line">      vm.$el = vm.__patch__(prevVnode, vnode)</span><br><span class="line">    &#125;</span><br><span class="line">    activeInstance = prevActiveInstance</span><br><span class="line">    <span class="comment">// update __vue__ reference</span></span><br><span class="line">    <span class="keyword">if</span> (prevEl) &#123;</span><br><span class="line">      prevEl.__vue__ = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (vm.$el) &#123;</span><br><span class="line">      vm.$el.__vue__ = vm</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// if parent is an HOC, update its $el as well</span></span><br><span class="line">    <span class="keyword">if</span> (vm.$vnode &amp;&amp; vm.$parent &amp;&amp; vm.$vnode === vm.$parent._vnode) &#123;</span><br><span class="line">      vm.$parent.$el = vm.$el</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// updated hook is called by the scheduler to ensure that children are</span></span><br><span class="line">    <span class="comment">// updated in a parent's updated hook.</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Vue.prototype.$forceUpdate = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></span><br><span class="line">    <span class="keyword">if</span> (vm._watcher) &#123;</span><br><span class="line">      vm._watcher.update()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Vue.prototype.$destroy = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></span><br><span class="line">    <span class="keyword">if</span> (vm._isBeingDestroyed) &#123;</span><br><span class="line">      <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">    callHook(vm, <span class="string">'beforeDestroy'</span>)</span><br><span class="line">    vm._isBeingDestroyed = <span class="literal">true</span></span><br><span class="line">    <span class="comment">// remove self from parent</span></span><br><span class="line">    <span class="keyword">const</span> parent = vm.$parent</span><br><span class="line">    <span class="keyword">if</span> (parent &amp;&amp; !parent._isBeingDestroyed &amp;&amp; !vm.$options.abstract) &#123;</span><br><span class="line">      remove(parent.$children, vm)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// teardown watchers</span></span><br><span class="line">    <span class="keyword">if</span> (vm._watcher) &#123;</span><br><span class="line">      vm._watcher.teardown()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> i = vm._watchers.length</span><br><span class="line">    <span class="keyword">while</span> (i--) &#123;</span><br><span class="line">      vm._watchers[i].teardown()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// remove reference from data ob</span></span><br><span class="line">    <span class="comment">// frozen object may not have observer.</span></span><br><span class="line">    <span class="keyword">if</span> (vm._data.__ob__) &#123;</span><br><span class="line">      vm._data.__ob__.vmCount--</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// call the last hook...</span></span><br><span class="line">    vm._isDestroyed = <span class="literal">true</span></span><br><span class="line">    <span class="comment">// invoke destroy hooks on current rendered tree</span></span><br><span class="line">    vm.__patch__(vm._vnode, <span class="literal">null</span>)</span><br><span class="line">    <span class="comment">// fire destroyed hook</span></span><br><span class="line">    callHook(vm, <span class="string">'destroyed'</span>)</span><br><span class="line">    <span class="comment">// turn off all instance listeners.</span></span><br><span class="line">    vm.$off()</span><br><span class="line">    <span class="comment">// remove __vue__ reference</span></span><br><span class="line">    <span class="keyword">if</span> (vm.$el) &#123;</span><br><span class="line">      vm.$el.__vue__ = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// release circular reference (#6759)</span></span><br><span class="line">    <span class="keyword">if</span> (vm.$vnode) &#123;</span><br><span class="line">      vm.$vnode.parent = <span class="literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="renderMixin"><a href="#renderMixin" class="headerlink" title="renderMixin"></a>renderMixin</h3><ul>
+<li>$nextTick</li>
+<li>_render</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">renderMixin</span> (<span class="params">Vue: Class&lt;Component&gt;</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// install runtime convenience helpers</span></span><br><span class="line">  installRenderHelpers(Vue.prototype)</span><br><span class="line"></span><br><span class="line">  Vue.prototype.$nextTick = <span class="function"><span class="keyword">function</span> (<span class="params">fn: Function</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> nextTick(fn, <span class="keyword">this</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Vue.prototype._render = <span class="function"><span class="keyword">function</span> (<span class="params"></span>): <span class="title">VNode</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> vm: Component = <span class="keyword">this</span></span><br><span class="line">    <span class="keyword">const</span> &#123; render, _parentVnode &#125; = vm.$options</span><br><span class="line"></span><br><span class="line">    <span class="comment">// reset _rendered flag on slots for duplicate slot check</span></span><br><span class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> vm.$slots) &#123;</span><br><span class="line">        <span class="comment">// $flow-disable-line</span></span><br><span class="line">        vm.$slots[key]._rendered = <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (_parentVnode) &#123;</span><br><span class="line">      vm.$scopedSlots = _parentVnode.data.scopedSlots || emptyObject</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// set parent vnode. this allows render functions to have access</span></span><br><span class="line">    <span class="comment">// to the data on the placeholder node.</span></span><br><span class="line">    vm.$vnode = _parentVnode</span><br><span class="line">    <span class="comment">// render self</span></span><br><span class="line">    <span class="keyword">let</span> vnode</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      vnode = render.call(vm._renderProxy, vm.$createElement)</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">      handleError(e, vm, <span class="string">`render`</span>)</span><br><span class="line">      <span class="comment">// return error render result,</span></span><br><span class="line">      <span class="comment">// or previous vnode to prevent render error causing blank component</span></span><br><span class="line">      <span class="comment">/* istanbul ignore else */</span></span><br><span class="line">      <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (vm.$options.renderError) &#123;</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">            vnode = vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e)</span><br><span class="line">          &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">            handleError(e, vm, <span class="string">`renderError`</span>)</span><br><span class="line">            vnode = vm._vnode</span><br><span class="line">          &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          vnode = vm._vnode</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        vnode = vm._vnode</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// return empty vnode in case the render function errored out</span></span><br><span class="line">    <span class="keyword">if</span> (!(vnode <span class="keyword">instanceof</span> VNode)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; <span class="built_in">Array</span>.isArray(vnode)) &#123;</span><br><span class="line">        warn(</span><br><span class="line">          <span class="string">'Multiple root nodes returned from render function. Render function '</span> +</span><br><span class="line">          <span class="string">'should return a single root node.'</span>,</span><br><span class="line">          vm</span><br><span class="line">        )</span><br><span class="line">      &#125;</span><br><span class="line">      vnode = createEmptyVNode()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// set parent</span></span><br><span class="line">    vnode.parent = _parentVnode</span><br><span class="line">    <span class="keyword">return</span> vnode</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述提及的installRenderHelper</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">installRenderHelpers</span> (<span class="params">target: any</span>) </span>&#123;</span><br><span class="line">  target._o = markOnce</span><br><span class="line">  target._n = toNumber</span><br><span class="line">  target._s = toString</span><br><span class="line">  target._l = renderList</span><br><span class="line">  target._t = renderSlot</span><br><span class="line">  target._q = looseEqual</span><br><span class="line">  target._i = looseIndexOf</span><br><span class="line">  target._m = renderStatic</span><br><span class="line">  target._f = resolveFilter</span><br><span class="line">  target._k = checkKeyCodes</span><br><span class="line">  target._b = bindObjectProps</span><br><span class="line">  target._v = createTextVNode</span><br><span class="line">  target._e = createEmptyVNode</span><br><span class="line">  target._u = resolveScopedSlots</span><br><span class="line">  target._g = bindObjectListeners</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="initGlobalAPI"><a href="#initGlobalAPI" class="headerlink" title="initGlobalAPI"></a>initGlobalAPI</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">initGlobalAPI</span> (<span class="params">Vue: GlobalAPI</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> configDef = &#123;&#125;</span><br><span class="line">  configDef.get = <span class="function"><span class="params">()</span> =&gt;</span> config</span><br><span class="line">  <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">    configDef.set = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      warn(</span><br><span class="line">        <span class="string">'Do not replace the Vue.config object, set individual fields instead.'</span></span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 静态变量 Vue.config</span></span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(Vue, <span class="string">'config'</span>, configDef)</span><br><span class="line"></span><br><span class="line">  Vue.util = &#123;</span><br><span class="line">    warn,</span><br><span class="line">    extend,</span><br><span class="line">    mergeOptions,</span><br><span class="line">    defineReactive</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Vue.set = set</span><br><span class="line">  Vue.delete = del</span><br><span class="line">  Vue.nextTick = nextTick</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Vue.option </span></span><br><span class="line">  Vue.options = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</span><br><span class="line">  ASSET_TYPES.forEach(<span class="function"><span class="params">type</span> =&gt;</span> &#123;</span><br><span class="line">    Vue.options[type + <span class="string">'s'</span>] = <span class="built_in">Object</span>.create(<span class="literal">null</span>)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// this is used to identify the "base" constructor to extend all plain-object</span></span><br><span class="line">  <span class="comment">// components with in Weex's multi-instance scenarios.</span></span><br><span class="line">  Vue.options._base = Vue</span><br><span class="line"></span><br><span class="line">  <span class="comment">// keep-alive</span></span><br><span class="line">  extend(Vue.options.components, builtInComponents)</span><br><span class="line"></span><br><span class="line">  initUse(Vue)</span><br><span class="line">  initMixin(Vue)</span><br><span class="line">  initExtend(Vue)</span><br><span class="line">  initAssetRegisters(Vue)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是引入的config:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (&#123;</span><br><span class="line">  optionMergeStrategies: <span class="built_in">Object</span>.create(<span class="literal">null</span>), <span class="comment">// 自定义合并策略</span></span><br><span class="line">  silent: <span class="literal">false</span>, <span class="comment">// 取消 Vue 所有的日志与警告</span></span><br><span class="line">  productionTip: process.env.NODE_ENV !== <span class="string">'production'</span>, <span class="comment">// 是否阻止启动时生成生产提示</span></span><br><span class="line">  devtools: process.env.NODE_ENV !== <span class="string">'production'</span>, <span class="comment">// 自定义合并策略</span></span><br><span class="line">  performance: <span class="literal">false</span>, <span class="comment">// 以在开发工具的性能/时间线面板中启用对组件初始化、编译、渲染和打补丁的性能追踪</span></span><br><span class="line">  errorHandler: <span class="literal">null</span>, <span class="comment">// 指定组件的渲染和观察期间未捕获错误的处理函数</span></span><br><span class="line">  warnHandler: <span class="literal">null</span>, <span class="comment">// 为 Vue 的运行时警告赋予一个自定义处理函数</span></span><br><span class="line">  ignoredElements: [], <span class="comment">// 为 Vue 的运行时警告赋予一个自定义处理函数</span></span><br><span class="line">  keyCodes: <span class="built_in">Object</span>.create(<span class="literal">null</span>), <span class="comment">// 给 v-on 自定义键位别名</span></span><br><span class="line">  isReservedTag: no,</span><br><span class="line">  isReservedAttr: no,</span><br><span class="line">  isUnknownElement: no,</span><br><span class="line">  getTagNamespace: noop,</span><br><span class="line">  parsePlatformTagName: identity,</span><br><span class="line">  mustUseProp: no,</span><br><span class="line">  _lifecycleHooks: LIFECYCLE_HOOKS</span><br><span class="line">&#125;: Config)</span><br></pre></td></tr></table></figure>
+<p>LIFECYCLE_HOOKS常量：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> LIFECYCLE_HOOKS = [</span><br><span class="line">  <span class="string">'beforeCreate'</span>,</span><br><span class="line">  <span class="string">'created'</span>,</span><br><span class="line">  <span class="string">'beforeMount'</span>,</span><br><span class="line">  <span class="string">'mounted'</span>,</span><br><span class="line">  <span class="string">'beforeUpdate'</span>,</span><br><span class="line">  <span class="string">'updated'</span>,</span><br><span class="line">  <span class="string">'beforeDestroy'</span>,</span><br><span class="line">  <span class="string">'destroyed'</span>,</span><br><span class="line">  <span class="string">'activated'</span>,</span><br><span class="line">  <span class="string">'deactivated'</span>,</span><br><span class="line">  <span class="string">'errorCaptured'</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>  ASSET_TYPES常量：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> ASSET_TYPES = [</span><br><span class="line">  <span class="string">'component'</span>,</span><br><span class="line">  <span class="string">'directive'</span>,</span><br><span class="line">  <span class="string">'filter'</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>extend:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">extend</span> (<span class="params">to, _from</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> _from) &#123;</span><br><span class="line">    to[key] = _from[key];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> to</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="initUse"><a href="#initUse" class="headerlink" title="initUse"></a>initUse</h3><ul>
+<li>Vue.use</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initUse</span> (<span class="params">Vue</span>) </span>&#123;</span><br><span class="line">  Vue.use = <span class="function"><span class="keyword">function</span> (<span class="params">plugin</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> installedPlugins = (<span class="keyword">this</span>._installedPlugins || (<span class="keyword">this</span>._installedPlugins = []));</span><br><span class="line">    <span class="keyword">if</span> (installedPlugins.indexOf(plugin) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// additional parameters</span></span><br><span class="line">    <span class="keyword">var</span> args = toArray(<span class="built_in">arguments</span>, <span class="number">1</span>);</span><br><span class="line">    args.unshift(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> plugin.install === <span class="string">'function'</span>) &#123;</span><br><span class="line">      plugin.install.apply(plugin, args);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> plugin === <span class="string">'function'</span>) &#123;</span><br><span class="line">      plugin.apply(<span class="literal">null</span>, args);</span><br><span class="line">    &#125;</span><br><span class="line">    installedPlugins.push(plugin);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="initMixin-1"><a href="#initMixin-1" class="headerlink" title="initMixin"></a>initMixin</h3><ul>
+<li>Vue.mixin</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initMixin</span> (<span class="params">Vue</span>) </span>&#123;</span><br><span class="line">  Vue.mixin = <span class="function"><span class="keyword">function</span> (<span class="params">mixin</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.options = mergeOptions(<span class="keyword">this</span>.options, mixin);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="initExtend"><a href="#initExtend" class="headerlink" title="initExtend"></a>initExtend</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initExtend</span> (<span class="params">Vue: GlobalAPI</span>) </span>&#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Each instance constructor, including Vue, has a unique</span></span><br><span class="line"><span class="comment">   * cid. This enables us to create wrapped "child</span></span><br><span class="line"><span class="comment">   * constructors" for prototypal inheritance and cache them.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  Vue.cid = <span class="number">0</span></span><br><span class="line">  <span class="keyword">let</span> cid = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Class inheritance</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  Vue.extend = <span class="function"><span class="keyword">function</span> (<span class="params">extendOptions: Object</span>): <span class="title">Function</span> </span>&#123;</span><br><span class="line">    extendOptions = extendOptions || &#123;&#125;</span><br><span class="line">    <span class="keyword">const</span> Super = <span class="keyword">this</span></span><br><span class="line">    <span class="keyword">const</span> SuperId = Super.cid</span><br><span class="line">    <span class="keyword">const</span> cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = &#123;&#125;)</span><br><span class="line">    <span class="keyword">if</span> (cachedCtors[SuperId]) &#123;</span><br><span class="line">      <span class="keyword">return</span> cachedCtors[SuperId]</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> name = extendOptions.name || Super.options.name</span><br><span class="line">    <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; name) &#123;</span><br><span class="line">      validateComponentName(name)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> Sub = <span class="function"><span class="keyword">function</span> <span class="title">VueComponent</span> (<span class="params">options</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">this</span>._init(options)</span><br><span class="line">    &#125;</span><br><span class="line">    Sub.prototype = <span class="built_in">Object</span>.create(Super.prototype)</span><br><span class="line">    Sub.prototype.constructor = Sub</span><br><span class="line">    Sub.cid = cid++</span><br><span class="line">    Sub.options = mergeOptions(</span><br><span class="line">      Super.options,</span><br><span class="line">      extendOptions</span><br><span class="line">    )</span><br><span class="line">    Sub[<span class="string">'super'</span>] = Super</span><br><span class="line"></span><br><span class="line">    <span class="comment">// For props and computed properties, we define the proxy getters on</span></span><br><span class="line">    <span class="comment">// the Vue instances at extension time, on the extended prototype. This</span></span><br><span class="line">    <span class="comment">// avoids Object.defineProperty calls for each instance created.</span></span><br><span class="line">    <span class="keyword">if</span> (Sub.options.props) &#123;</span><br><span class="line">      initProps(Sub)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (Sub.options.computed) &#123;</span><br><span class="line">      initComputed(Sub)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// allow further extension/mixin/plugin usage</span></span><br><span class="line">    Sub.extend = Super.extend</span><br><span class="line">    Sub.mixin = Super.mixin</span><br><span class="line">    Sub.use = Super.use</span><br><span class="line"></span><br><span class="line">    <span class="comment">// create asset registers, so extended classes</span></span><br><span class="line">    <span class="comment">// can have their private assets too.</span></span><br><span class="line">    ASSET_TYPES.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">type</span>) </span>&#123;</span><br><span class="line">      Sub[type] = Super[type]</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="comment">// enable recursive self-lookup</span></span><br><span class="line">    <span class="keyword">if</span> (name) &#123;</span><br><span class="line">      Sub.options.components[name] = Sub</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// keep a reference to the super options at extension time.</span></span><br><span class="line">    <span class="comment">// later at instantiation we can check if Super's options have</span></span><br><span class="line">    <span class="comment">// been updated.</span></span><br><span class="line">    Sub.superOptions = Super.options</span><br><span class="line">    Sub.extendOptions = extendOptions</span><br><span class="line">    Sub.sealedOptions = extend(&#123;&#125;, Sub.options)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// cache constructor</span></span><br><span class="line">    cachedCtors[SuperId] = Sub</span><br><span class="line">    <span class="keyword">return</span> Sub</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="initAssetRegisters"><a href="#initAssetRegisters" class="headerlink" title="initAssetRegisters"></a>initAssetRegisters</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">initAssetRegisters</span> (<span class="params">Vue: GlobalAPI</span>) </span>&#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Create asset registration methods.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  ASSET_TYPES.forEach(<span class="function"><span class="params">type</span> =&gt;</span> &#123;</span><br><span class="line">    Vue[type] = <span class="function"><span class="keyword">function</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">      id: string,</span></span></span><br><span class="line"><span class="function"><span class="params">      definition: Function | Object</span></span></span><br><span class="line"><span class="function"><span class="params">    </span>): <span class="title">Function</span> | <span class="title">Object</span> | <span class="title">void</span> </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (!definition) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.options[type + <span class="string">'s'</span>][id]</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">/* istanbul ignore if */</span></span><br><span class="line">        <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span> &amp;&amp; type === <span class="string">'component'</span>) &#123;</span><br><span class="line">          validateComponentName(id)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (type === <span class="string">'component'</span> &amp;&amp; isPlainObject(definition)) &#123;</span><br><span class="line">          definition.name = definition.name || id</span><br><span class="line">          definition = <span class="keyword">this</span>.options._base.extend(definition)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (type === <span class="string">'directive'</span> &amp;&amp; <span class="keyword">typeof</span> definition === <span class="string">'function'</span>) &#123;</span><br><span class="line">          definition = &#123; <span class="attr">bind</span>: definition, <span class="attr">update</span>: definition &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">this</span>.options[type + <span class="string">'s'</span>][id] = definition</span><br><span class="line">        <span class="keyword">return</span> definition</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<p>⌛️待填坑</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/07/31/要么瘦要么死/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/31/要么瘦要么死/" itemprop="url">花散里 | 要么瘦要么死</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-31T13:08:04+00:00">
+                2018-07-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近因为在公司里胡吃海喝，体重以迅雷不及掩耳之势飙升到了历史最高峰。</p>
+<p>靠博客减肥，就在今天！</p>
+<p>以后中午再打七个菜，就杀个这个程序媛祭天🔪。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/07/27/Lodash阅读全记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/27/Lodash阅读全记录/" itemprop="url">夕顔 | Lodash阅读全记录</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-27T10:46:30+00:00">
+                2018-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在Jason哥的安利下成功入了Lodash的坑，刚看到这个单词的时候还在想为什么我问Jason哥避免重复提交怎么做他却给我安利一个懒加载的库😂，在github上查了一波才发现原来这是我们每天写的utils的集合版。</p>
+<p>这篇文就用来记录一下阅读过程中的一些理解。</p>
+<h1 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add lodash</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lodash <span class="keyword">from</span> <span class="string">'lodash'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>._ = loadash</span><br></pre></td></tr></table></figure>
+<h1 id="方法解读"><a href="#方法解读" class="headerlink" title="方法解读"></a>方法解读</h1><h2 id="isArrayLike"><a href="#isArrayLike" class="headerlink" title="isArrayLike"></a>isArrayLike</h2><p><strong>用法</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">_.isArrayLike([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="comment">// =&gt; true</span></span><br><span class="line"> </span><br><span class="line">_.isArrayLike(<span class="built_in">document</span>.body.children);</span><br><span class="line"><span class="comment">// =&gt; true</span></span><br><span class="line"> </span><br><span class="line">_.isArrayLike(<span class="string">'abc'</span>);</span><br><span class="line"><span class="comment">// =&gt; true</span></span><br><span class="line"> </span><br><span class="line">_.isArrayLike(_.noop);</span><br><span class="line"><span class="comment">// =&gt; false</span></span><br></pre></td></tr></table></figure>
+<p><strong>源码</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> MAX_SAFE_INTEGER = <span class="number">9007199254740991</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isArrayLike</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> value !== <span class="literal">null</span> &amp;&amp; <span class="keyword">typeof</span> value !== <span class="string">'function'</span> &amp;&amp; isLength(value.length)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isLength</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> </span><br><span class="line">    	<span class="keyword">typeof</span> value === <span class="string">'number'</span> &amp;&amp; </span><br><span class="line">        value &gt; <span class="number">-1</span> &amp;&amp; </span><br><span class="line">        value % <span class="number">1</span> === <span class="number">0</span> &amp;&amp;</span><br><span class="line">        value &lt;= MAX_SAFE_INTEGER</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>源码解读</strong></p>
+<p>判断一个数组是否是类数组的方法就是判断它是否有有效的length属性。</p>
 
           
         
@@ -1546,413 +1976,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/04/09/祭一场飞蛾扑火/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vickie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lucid Dream">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/09/祭一场飞蛾扑火/" itemprop="url">夕顔 | 祭一场飞蛾扑火</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-09T16:58:02+00:00">
-                2018-04-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>大概从高中毕业以后，已经很久没有如此执着的想要去完成一件事了。默默的悄无声息的想要去完成一件事。</p>
-<p>幻想过无数种场景，自己披襟斩棘最终站在那栋记忆中的大楼下，迎面走过来那人会是怎样的表情呢。</p>
-<p>幻想终究是幻想，说到底自己一开始也从没有想过能够真正实现，可是就是不知道从哪一天开始脑子里就开始冒出这个疯狂的念头了。</p>
-<p>会开始去网上找一些招聘信息，开始联络学长学姐，希望能得到一个内推机会，开始补自己的知识漏洞，看很多面试题，学习棘手的算法。</p>
-<p>可是心里非常清楚，什么是以卵击石，什么是飞蛾扑火。</p>
-<p>那天晚上的心情，我还依稀记得。</p>
-<p>和学校里一个旧友谈起了工作。说真的，走到春招这一步，我已不在意身边的人到底去了哪个公司。</p>
-<p>日语里有一个词，叫“あいにく”，翻译成中文大概是“很不凑巧”的意思。仿佛是上帝偷看了我内心的剧本，而给我安排了一场内心的历练。</p>
-<p>她无意提起的公司名，有意无意的触碰到了那根倒插在我内心里尖锐的刺，一阵生疼。</p>
-<p>很不凑巧，在和她聊天前我刚好收到了笔试通知。怕什么来什么。</p>
-<p>上海寒彻骨的夜，这繁华的城，纵横满面的泪。丑态尽展。</p>
-<p>我真的不嫉妒，不，我是嫉妒的发疯。</p>
-<p>第一次，那么痛恨，痛恨自己没有早点学前端，或者，那么痛恨，自己学了前端。转行这条路，走的实在太艰辛了。</p>
-<p>那一刻，才对“少壮不努力，老大徒伤悲”这句话里藏匿着的不甘与无力，理解的如此深刻。</p>
-<p>是真的真的很不甘心吧。</p>
-<hr>
-<p>笔试并没有想象中难，也尽力做了，但终究是再没有面试通知了。</p>
-<p>功力尚浅，还需要大量的学习。</p>
-<p>真的非常希望，在下一次机会来临的时候，自己不再是此时懦弱的自己，能够勇敢的并且有足够的实力去抓住它。</p>
-<p>以下是一些题目回溯的总结。</p>
-<ul>
-<li>按顺序取出数字的英文字母，数字去重(涉及到公司名字 匿了)</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">"t1测est试23"</span>;</span><br><span class="line"><span class="keyword">let</span> nums = str.match(<span class="regexp">/\d/g</span>);</span><br><span class="line"><span class="keyword">let</span> chars = str.match(<span class="regexp">/[A-Za-z]/g</span>);</span><br><span class="line">nums = [...new <span class="built_in">Set</span>(nums)];</span><br><span class="line"><span class="keyword">let</span> s = <span class="string">""</span>;</span><br><span class="line">nums.forEach(<span class="function"><span class="params">e</span> =&gt;</span> (s += e));</span><br><span class="line">chars.forEach(<span class="function"><span class="params">e</span> =&gt;</span> (s += e));</span><br><span class="line"><span class="built_in">console</span>.log(s);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>对一维数组，根据 type 生成二维数组。</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = [</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  <span class="number">2</span>,</span><br><span class="line">  <span class="string">"test"</span>,</span><br><span class="line">  <span class="literal">undefined</span>,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"product"</span>,</span><br><span class="line">    content: <span class="string">"product1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"product"</span>,</span><br><span class="line">    content: <span class="string">"product2"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"tag"</span>,</span><br><span class="line">    content: <span class="string">"tag1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"product"</span>,</span><br><span class="line">    content: <span class="string">"product3"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"tag"</span>,</span><br><span class="line">    content: <span class="string">"tag2"</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">groupList</span>(<span class="params">list</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 当输入数据不合法时，输出空数组[]</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Object</span>.prototype.toString.call(list) !== <span class="string">"[object Array]"</span>) <span class="keyword">return</span> [];</span><br><span class="line">  <span class="comment">// 过滤掉不合法元素</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = list.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="keyword">if</span> (list[i] == <span class="literal">null</span> || <span class="keyword">typeof</span> list[i] != <span class="string">"object"</span>) &#123;</span><br><span class="line">      list.splice(i, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获得所有类型</span></span><br><span class="line">  <span class="keyword">let</span> types = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = list.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    types.push(list[i].type);</span><br><span class="line">  &#125;</span><br><span class="line">  types = [...new <span class="built_in">Set</span>(types)];</span><br><span class="line">  <span class="keyword">let</span> product = [],</span><br><span class="line">    tag = [],</span><br><span class="line">    res = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; types.length; j++) &#123;</span><br><span class="line">    <span class="keyword">let</span> newType = [];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = list.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">      <span class="keyword">if</span> (list[i].type == types[j]) &#123;</span><br><span class="line">        newType.unshift(list[i].content);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    res.push(newType);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> res2 = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = types.length - <span class="number">1</span>; j &gt;= <span class="number">0</span>; j--) &#123;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123; <span class="attr">type</span>: types[j], <span class="attr">content</span>: res[j] &#125;;</span><br><span class="line">    res2.push(tmp);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> res2;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> data = str;</span><br><span class="line"><span class="keyword">const</span> result = groupList(data);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(result));</span><br></pre></td></tr></table></figure>
-<ul>
-<li>实现类似迭代方法中的 map()方法</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">map</span>(<span class="params">data, fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> res;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Object</span>.prototype.toString.call(data) === <span class="string">"[object Array]"</span>) &#123;</span><br><span class="line">    res = [];</span><br><span class="line">    data.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">v, i, arr</span>) </span>&#123;</span><br><span class="line">      res.push(fn(v, i, arr));</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">Object</span>.prototype.toString.call(data) === <span class="string">"[object Object]"</span>) &#123;</span><br><span class="line">    res = &#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> data) &#123;</span><br><span class="line">      res[key] = fn(data[key], key, data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/27/排序虐我千百遍，我待排序如初恋/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vickie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lucid Dream">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/27/排序虐我千百遍，我待排序如初恋/" itemprop="url">夕顔 | 排序虐我千百遍，我待排序如初恋</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-27T16:51:29+00:00">
-                2018-03-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mergeSort</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> length = arr.length;</span><br><span class="line">  <span class="keyword">if</span> (length &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> middle = <span class="built_in">parseInt</span>(length / <span class="number">2</span>);</span><br><span class="line">  <span class="keyword">const</span> left = arr.slice(<span class="number">0</span>, middle);</span><br><span class="line">  <span class="keyword">const</span> right = arr.slice(middle);</span><br><span class="line">  <span class="keyword">return</span> merge(mergeSort(left), mergeSort(right));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">merge</span>(<span class="params">left, right</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> result = [];</span><br><span class="line">  <span class="keyword">while</span> (left.length &amp;&amp; right.length) &#123;</span><br><span class="line">    <span class="keyword">if</span> (left[<span class="number">0</span>] &lt;= right[<span class="number">0</span>]) &#123;</span><br><span class="line">      result.push(left.shift());</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      result.push(right.shift());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> (left.length) &#123;</span><br><span class="line">    result.push(left.shift());</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> (right.length) &#123;</span><br><span class="line">    result.push(right.shift());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/23/缓动算法推导/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vickie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lucid Dream">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/23/缓动算法推导/" itemprop="url">夕顔 | 缓动算法推导</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-23T22:33:21+00:00">
-                2018-03-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tween = &#123;</span><br><span class="line">    linear: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * t / d + b</span><br><span class="line">    &#125;,</span><br><span class="line">    easeIn: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * (t /= d) * t + b</span><br><span class="line">    &#125;,</span><br><span class="line">    easeOut: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> b + c * (- t * t + <span class="number">2</span> * t)</span><br><span class="line">    &#125;,</span><br><span class="line">    strongEaseIn: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * (t /= d) * t * t * t * t + b</span><br><span class="line">    &#125;,</span><br><span class="line">    strongEaseOut: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * ((t = t / d - <span class="number">1</span>) * t * t * t + <span class="number">1</span>) + b </span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>首先说明一下四个参数代表的含义</p>
-<ul>
-<li>t : 动画已消耗的时间 </li>
-<li>b : 小球原始位置</li>
-<li>c : 小球目标位置</li>
-<li>d : 动画持续总时间<br>其中b、c、d我们都可以看作常量，所以小球的运动轨迹其实是一个关于t的函数曲线。下面我们对上述算法进行抽象,我们把运动的总值设为y,运动时间设为x。</li>
-</ul>
-<hr>
-<p>linear<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/Mp7p1fEqrJcCcbQDrYMjlER2pBDvMG6oVyCLISbLDkI!/b/dEUBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="linear"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//linear</span></span><br><span class="line">y = c * x / d + b</span><br><span class="line">  = c / d * x + b</span><br><span class="line">  = a * x + b</span><br></pre></td></tr></table></figure></p>
-<p>非常典型的线性函数。</p>
-<hr>
-<p>easeIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/XTI349J6h3F.zJ4uJP8UGiIvoN8v6xxwGSPRt.sjsCU!/b/dEABAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeIn"><br>strongEaseIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/jRluvelHIpSEl65GXo7q1bh0gvqenq7r8YiqfCtKOFI!/b/dPMAAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="strongEaseIn"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//easeIn</span></span><br><span class="line">y = c * (x /= d) * x + b</span><br><span class="line">  = c * (x / d) * (x / d) + b</span><br><span class="line">  = c / d ^ <span class="number">2</span> * x ^ <span class="number">2</span> + b</span><br><span class="line">  = a * x ^ <span class="number">2</span> + b</span><br><span class="line"></span><br><span class="line"><span class="comment">//strongEaseIn</span></span><br><span class="line">y = a * x ^ <span class="number">5</span> + b</span><br></pre></td></tr></table></figure></p>
-<p>看曲线图可以明显看出是平滑进入的。</p>
-<p>至于什么叫strongEaseIn，自己看图体会。</p>
-<hr>
-<p>easeOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/OAgJS1StIUC0HlV7YyuOJIrH8MFbY5zeYzpnTqaOa14!/b/dEQBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeOut"><br>strongEaseOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/iTxQm*raWaCQWMft8qwuyoqBxnFtP431nIuGMVedUfE!/b/dEABAAAAAAAA&amp;bo=igKQAQAAAAADFys!&amp;rf=viewer_4" alt="strongEaseOut"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// easeOut</span></span><br><span class="line"> y = b + c * (- x * x + <span class="number">2</span> * x)</span><br><span class="line"><span class="comment">//strongEaseOut</span></span><br><span class="line">y = c * ((x = x / d - <span class="number">1</span>) * x * x * x + <span class="number">1</span>) + b</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2003,7 +2026,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

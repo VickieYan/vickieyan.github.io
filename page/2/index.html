@@ -239,6 +239,413 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/04/09/祭一场飞蛾扑火/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/09/祭一场飞蛾扑火/" itemprop="url">夕顔 | 祭一场飞蛾扑火</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-09T16:58:02+00:00">
+                2018-04-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>大概从高中毕业以后，已经很久没有如此执着的想要去完成一件事了。默默的悄无声息的想要去完成一件事。</p>
+<p>幻想过无数种场景，自己披襟斩棘最终站在那栋记忆中的大楼下，迎面走过来那人会是怎样的表情呢。</p>
+<p>幻想终究是幻想，说到底自己一开始也从没有想过能够真正实现，可是就是不知道从哪一天开始脑子里就开始冒出这个疯狂的念头了。</p>
+<p>会开始去网上找一些招聘信息，开始联络学长学姐，希望能得到一个内推机会，开始补自己的知识漏洞，看很多面试题，学习棘手的算法。</p>
+<p>可是心里非常清楚，什么是以卵击石，什么是飞蛾扑火。</p>
+<p>那天晚上的心情，我还依稀记得。</p>
+<p>和学校里一个旧友谈起了工作。说真的，走到春招这一步，我已不在意身边的人到底去了哪个公司。</p>
+<p>日语里有一个词，叫“あいにく”，翻译成中文大概是“很不凑巧”的意思。仿佛是上帝偷看了我内心的剧本，而给我安排了一场内心的历练。</p>
+<p>她无意提起的公司名，有意无意的触碰到了那根倒插在我内心里尖锐的刺，一阵生疼。</p>
+<p>很不凑巧，在和她聊天前我刚好收到了笔试通知。怕什么来什么。</p>
+<p>上海寒彻骨的夜，这繁华的城，纵横满面的泪。丑态尽展。</p>
+<p>我真的不嫉妒，不，我是嫉妒的发疯。</p>
+<p>第一次，那么痛恨，痛恨自己没有早点学前端，或者，那么痛恨，自己学了前端。转行这条路，走的实在太艰辛了。</p>
+<p>那一刻，才对“少壮不努力，老大徒伤悲”这句话里藏匿着的不甘与无力，理解的如此深刻。</p>
+<p>是真的真的很不甘心吧。</p>
+<hr>
+<p>笔试并没有想象中难，也尽力做了，但终究是再没有面试通知了。</p>
+<p>功力尚浅，还需要大量的学习。</p>
+<p>真的非常希望，在下一次机会来临的时候，自己不再是此时懦弱的自己，能够勇敢的并且有足够的实力去抓住它。</p>
+<p>以下是一些题目回溯的总结。</p>
+<ul>
+<li>按顺序取出数字的英文字母，数字去重(涉及到公司名字 匿了)</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = <span class="string">"t1测est试23"</span>;</span><br><span class="line"><span class="keyword">let</span> nums = str.match(<span class="regexp">/\d/g</span>);</span><br><span class="line"><span class="keyword">let</span> chars = str.match(<span class="regexp">/[A-Za-z]/g</span>);</span><br><span class="line">nums = [...new <span class="built_in">Set</span>(nums)];</span><br><span class="line"><span class="keyword">let</span> s = <span class="string">""</span>;</span><br><span class="line">nums.forEach(<span class="function"><span class="params">e</span> =&gt;</span> (s += e));</span><br><span class="line">chars.forEach(<span class="function"><span class="params">e</span> =&gt;</span> (s += e));</span><br><span class="line"><span class="built_in">console</span>.log(s);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对一维数组，根据 type 生成二维数组。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> str = [</span><br><span class="line">  <span class="literal">null</span>,</span><br><span class="line">  <span class="number">2</span>,</span><br><span class="line">  <span class="string">"test"</span>,</span><br><span class="line">  <span class="literal">undefined</span>,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"product"</span>,</span><br><span class="line">    content: <span class="string">"product1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"product"</span>,</span><br><span class="line">    content: <span class="string">"product2"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"tag"</span>,</span><br><span class="line">    content: <span class="string">"tag1"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"product"</span>,</span><br><span class="line">    content: <span class="string">"product3"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    type: <span class="string">"tag"</span>,</span><br><span class="line">    content: <span class="string">"tag2"</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">groupList</span>(<span class="params">list</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 当输入数据不合法时，输出空数组[]</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Object</span>.prototype.toString.call(list) !== <span class="string">"[object Array]"</span>) <span class="keyword">return</span> [];</span><br><span class="line">  <span class="comment">// 过滤掉不合法元素</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = list.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    <span class="keyword">if</span> (list[i] == <span class="literal">null</span> || <span class="keyword">typeof</span> list[i] != <span class="string">"object"</span>) &#123;</span><br><span class="line">      list.splice(i, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获得所有类型</span></span><br><span class="line">  <span class="keyword">let</span> types = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = list.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">    types.push(list[i].type);</span><br><span class="line">  &#125;</span><br><span class="line">  types = [...new <span class="built_in">Set</span>(types)];</span><br><span class="line">  <span class="keyword">let</span> product = [],</span><br><span class="line">    tag = [],</span><br><span class="line">    res = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; types.length; j++) &#123;</span><br><span class="line">    <span class="keyword">let</span> newType = [];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = list.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">      <span class="keyword">if</span> (list[i].type == types[j]) &#123;</span><br><span class="line">        newType.unshift(list[i].content);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    res.push(newType);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> res2 = [];</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = types.length - <span class="number">1</span>; j &gt;= <span class="number">0</span>; j--) &#123;</span><br><span class="line">    <span class="keyword">let</span> tmp = &#123; <span class="attr">type</span>: types[j], <span class="attr">content</span>: res[j] &#125;;</span><br><span class="line">    res2.push(tmp);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> res2;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> data = str;</span><br><span class="line"><span class="keyword">const</span> result = groupList(data);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">JSON</span>.stringify(result));</span><br></pre></td></tr></table></figure>
+<ul>
+<li>实现类似迭代方法中的 map()方法</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">map</span>(<span class="params">data, fn</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> res;</span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">Object</span>.prototype.toString.call(data) === <span class="string">"[object Array]"</span>) &#123;</span><br><span class="line">    res = [];</span><br><span class="line">    data.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">v, i, arr</span>) </span>&#123;</span><br><span class="line">      res.push(fn(v, i, arr));</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">Object</span>.prototype.toString.call(data) === <span class="string">"[object Object]"</span>) &#123;</span><br><span class="line">    res = &#123;&#125;;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> key <span class="keyword">in</span> data) &#123;</span><br><span class="line">      res[key] = fn(data[key], key, data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/27/排序虐我千百遍，我待排序如初恋/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/27/排序虐我千百遍，我待排序如初恋/" itemprop="url">夕顔 | 排序虐我千百遍，我待排序如初恋</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-27T16:51:29+00:00">
+                2018-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mergeSort</span>(<span class="params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> length = arr.length;</span><br><span class="line">  <span class="keyword">if</span> (length &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> arr;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> middle = <span class="built_in">parseInt</span>(length / <span class="number">2</span>);</span><br><span class="line">  <span class="keyword">const</span> left = arr.slice(<span class="number">0</span>, middle);</span><br><span class="line">  <span class="keyword">const</span> right = arr.slice(middle);</span><br><span class="line">  <span class="keyword">return</span> merge(mergeSort(left), mergeSort(right));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">merge</span>(<span class="params">left, right</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> result = [];</span><br><span class="line">  <span class="keyword">while</span> (left.length &amp;&amp; right.length) &#123;</span><br><span class="line">    <span class="keyword">if</span> (left[<span class="number">0</span>] &lt;= right[<span class="number">0</span>]) &#123;</span><br><span class="line">      result.push(left.shift());</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      result.push(right.shift());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> (left.length) &#123;</span><br><span class="line">    result.push(left.shift());</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">while</span> (right.length) &#123;</span><br><span class="line">    result.push(right.shift());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/23/缓动算法推导/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/23/缓动算法推导/" itemprop="url">夕顔 | 缓动算法推导</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-23T22:33:21+00:00">
+                2018-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tween = &#123;</span><br><span class="line">    linear: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * t / d + b</span><br><span class="line">    &#125;,</span><br><span class="line">    easeIn: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * (t /= d) * t + b</span><br><span class="line">    &#125;,</span><br><span class="line">    easeOut: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> b + c * (- t * t + <span class="number">2</span> * t)</span><br><span class="line">    &#125;,</span><br><span class="line">    strongEaseIn: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * (t /= d) * t * t * t * t + b</span><br><span class="line">    &#125;,</span><br><span class="line">    strongEaseOut: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * ((t = t / d - <span class="number">1</span>) * t * t * t + <span class="number">1</span>) + b </span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先说明一下四个参数代表的含义</p>
+<ul>
+<li>t : 动画已消耗的时间 </li>
+<li>b : 小球原始位置</li>
+<li>c : 小球目标位置</li>
+<li>d : 动画持续总时间<br>其中b、c、d我们都可以看作常量，所以小球的运动轨迹其实是一个关于t的函数曲线。下面我们对上述算法进行抽象,我们把运动的总值设为y,运动时间设为x。</li>
+</ul>
+<hr>
+<p>linear<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/Mp7p1fEqrJcCcbQDrYMjlER2pBDvMG6oVyCLISbLDkI!/b/dEUBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="linear"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//linear</span></span><br><span class="line">y = c * x / d + b</span><br><span class="line">  = c / d * x + b</span><br><span class="line">  = a * x + b</span><br></pre></td></tr></table></figure></p>
+<p>非常典型的线性函数。</p>
+<hr>
+<p>easeIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/XTI349J6h3F.zJ4uJP8UGiIvoN8v6xxwGSPRt.sjsCU!/b/dEABAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeIn"><br>strongEaseIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/jRluvelHIpSEl65GXo7q1bh0gvqenq7r8YiqfCtKOFI!/b/dPMAAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="strongEaseIn"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//easeIn</span></span><br><span class="line">y = c * (x /= d) * x + b</span><br><span class="line">  = c * (x / d) * (x / d) + b</span><br><span class="line">  = c / d ^ <span class="number">2</span> * x ^ <span class="number">2</span> + b</span><br><span class="line">  = a * x ^ <span class="number">2</span> + b</span><br><span class="line"></span><br><span class="line"><span class="comment">//strongEaseIn</span></span><br><span class="line">y = a * x ^ <span class="number">5</span> + b</span><br></pre></td></tr></table></figure></p>
+<p>看曲线图可以明显看出是平滑进入的。</p>
+<p>至于什么叫strongEaseIn，自己看图体会。</p>
+<hr>
+<p>easeOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/OAgJS1StIUC0HlV7YyuOJIrH8MFbY5zeYzpnTqaOa14!/b/dEQBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeOut"><br>strongEaseOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/iTxQm*raWaCQWMft8qwuyoqBxnFtP431nIuGMVedUfE!/b/dEABAAAAAAAA&amp;bo=igKQAQAAAAADFys!&amp;rf=viewer_4" alt="strongEaseOut"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// easeOut</span></span><br><span class="line"> y = b + c * (- x * x + <span class="number">2</span> * x)</span><br><span class="line"><span class="comment">//strongEaseOut</span></span><br><span class="line">y = c * ((x = x / d - <span class="number">1</span>) * x * x * x + <span class="number">1</span>) + b</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/23/滚蛋吧！BUG君/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -525,7 +932,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/03/15/那些年干过的蠢事/" itemprop="url">帚木 | 那些年干过的蠢事</a></h2>
+                <a class="post-title-link" href="/2018/03/15/那些年干过的蠢事/" itemprop="url">花散里 | 那些年干过的蠢事</a></h2>
         
 
         <div class="post-meta">
@@ -1169,7 +1576,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
