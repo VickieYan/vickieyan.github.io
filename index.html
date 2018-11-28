@@ -381,135 +381,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/07/27/Lodash阅读全记录/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vickie">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Lucid Dream">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/27/Lodash阅读全记录/" itemprop="url">夕顔 | Lodash阅读全记录</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-27T10:46:30+00:00">
-                2018-07-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在Jason哥的安利下成功入了Lodash的坑，刚看到这个单词的时候还在想为什么我问Jason哥避免重复提交怎么做他却给我安利一个懒加载的库😂，在github上查了一波才发现原来这是我们每天写的utils的集合版。</p>
-<p>这篇文就用来记录一下阅读过程中的一些理解。</p>
-<h1 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add lodash</span><br></pre></td></tr></table></figure>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> lodash <span class="keyword">from</span> <span class="string">'lodash'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>._ = loadash</span><br></pre></td></tr></table></figure>
-<h1 id="方法解读"><a href="#方法解读" class="headerlink" title="方法解读"></a>方法解读</h1><h2 id="isArrayLike"><a href="#isArrayLike" class="headerlink" title="isArrayLike"></a>isArrayLike</h2><p><strong>用法</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">_.isArrayLike([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="comment">// =&gt; true</span></span><br><span class="line"> </span><br><span class="line">_.isArrayLike(<span class="built_in">document</span>.body.children);</span><br><span class="line"><span class="comment">// =&gt; true</span></span><br><span class="line"> </span><br><span class="line">_.isArrayLike(<span class="string">'abc'</span>);</span><br><span class="line"><span class="comment">// =&gt; true</span></span><br><span class="line"> </span><br><span class="line">_.isArrayLike(_.noop);</span><br><span class="line"><span class="comment">// =&gt; false</span></span><br></pre></td></tr></table></figure>
-<p><strong>源码</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> MAX_SAFE_INTEGER = <span class="number">9007199254740991</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isArrayLike</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> value !== <span class="literal">null</span> &amp;&amp; <span class="keyword">typeof</span> value !== <span class="string">'function'</span> &amp;&amp; isLength(value.length)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isLength</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> </span><br><span class="line">    	<span class="keyword">typeof</span> value === <span class="string">'number'</span> &amp;&amp; </span><br><span class="line">        value &gt; <span class="number">-1</span> &amp;&amp; </span><br><span class="line">        value % <span class="number">1</span> === <span class="number">0</span> &amp;&amp;</span><br><span class="line">        value &lt;= MAX_SAFE_INTEGER</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>源码解读</strong></p>
-<p>判断一个数组是否是类数组的方法就是判断它是否有有效的length属性。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/07/15/每一只蝴蝶都是从前一朵花的鬼魂/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1946,6 +1817,142 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/23/缓动算法推导/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/23/缓动算法推导/" itemprop="url">夕顔 | 缓动算法推导</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-23T22:33:21+00:00">
+                2018-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tween = &#123;</span><br><span class="line">    linear: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * t / d + b</span><br><span class="line">    &#125;,</span><br><span class="line">    easeIn: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * (t /= d) * t + b</span><br><span class="line">    &#125;,</span><br><span class="line">    easeOut: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> b + c * (- t * t + <span class="number">2</span> * t)</span><br><span class="line">    &#125;,</span><br><span class="line">    strongEaseIn: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * (t /= d) * t * t * t * t + b</span><br><span class="line">    &#125;,</span><br><span class="line">    strongEaseOut: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * ((t = t / d - <span class="number">1</span>) * t * t * t + <span class="number">1</span>) + b </span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先说明一下四个参数代表的含义</p>
+<ul>
+<li>t : 动画已消耗的时间 </li>
+<li>b : 小球原始位置</li>
+<li>c : 小球目标位置</li>
+<li>d : 动画持续总时间<br>其中b、c、d我们都可以看作常量，所以小球的运动轨迹其实是一个关于t的函数曲线。下面我们对上述算法进行抽象,我们把运动的总值设为y,运动时间设为x。</li>
+</ul>
+<hr>
+<p>linear<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/Mp7p1fEqrJcCcbQDrYMjlER2pBDvMG6oVyCLISbLDkI!/b/dEUBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="linear"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//linear</span></span><br><span class="line">y = c * x / d + b</span><br><span class="line">  = c / d * x + b</span><br><span class="line">  = a * x + b</span><br></pre></td></tr></table></figure></p>
+<p>非常典型的线性函数。</p>
+<hr>
+<p>easeIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/XTI349J6h3F.zJ4uJP8UGiIvoN8v6xxwGSPRt.sjsCU!/b/dEABAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeIn"><br>strongEaseIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/jRluvelHIpSEl65GXo7q1bh0gvqenq7r8YiqfCtKOFI!/b/dPMAAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="strongEaseIn"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//easeIn</span></span><br><span class="line">y = c * (x /= d) * x + b</span><br><span class="line">  = c * (x / d) * (x / d) + b</span><br><span class="line">  = c / d ^ <span class="number">2</span> * x ^ <span class="number">2</span> + b</span><br><span class="line">  = a * x ^ <span class="number">2</span> + b</span><br><span class="line"></span><br><span class="line"><span class="comment">//strongEaseIn</span></span><br><span class="line">y = a * x ^ <span class="number">5</span> + b</span><br></pre></td></tr></table></figure></p>
+<p>看曲线图可以明显看出是平滑进入的。</p>
+<p>至于什么叫strongEaseIn，自己看图体会。</p>
+<hr>
+<p>easeOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/OAgJS1StIUC0HlV7YyuOJIrH8MFbY5zeYzpnTqaOa14!/b/dEQBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeOut"><br>strongEaseOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/iTxQm*raWaCQWMft8qwuyoqBxnFtP431nIuGMVedUfE!/b/dEABAAAAAAAA&amp;bo=igKQAQAAAAADFys!&amp;rf=viewer_4" alt="strongEaseOut"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// easeOut</span></span><br><span class="line"> y = b + c * (- x * x + <span class="number">2</span> * x)</span><br><span class="line"><span class="comment">//strongEaseOut</span></span><br><span class="line">y = c * ((x = x / d - <span class="number">1</span>) * x * x * x + <span class="number">1</span>) + b</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1996,7 +2003,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
