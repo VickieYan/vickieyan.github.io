@@ -239,6 +239,142 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/23/缓动算法推导/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vickie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Lucid Dream">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/23/缓动算法推导/" itemprop="url">夕顔 | 缓动算法推导</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-23T22:33:21+00:00">
+                2018-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tween = &#123;</span><br><span class="line">    linear: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * t / d + b</span><br><span class="line">    &#125;,</span><br><span class="line">    easeIn: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * (t /= d) * t + b</span><br><span class="line">    &#125;,</span><br><span class="line">    easeOut: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> b + c * (- t * t + <span class="number">2</span> * t)</span><br><span class="line">    &#125;,</span><br><span class="line">    strongEaseIn: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * (t /= d) * t * t * t * t + b</span><br><span class="line">    &#125;,</span><br><span class="line">    strongEaseOut: <span class="function"><span class="keyword">function</span>(<span class="params">t, b, c, d</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> c * ((t = t / d - <span class="number">1</span>) * t * t * t + <span class="number">1</span>) + b </span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先说明一下四个参数代表的含义</p>
+<ul>
+<li>t : 动画已消耗的时间 </li>
+<li>b : 小球原始位置</li>
+<li>c : 小球目标位置</li>
+<li>d : 动画持续总时间<br>其中b、c、d我们都可以看作常量，所以小球的运动轨迹其实是一个关于t的函数曲线。下面我们对上述算法进行抽象,我们把运动的总值设为y,运动时间设为x。</li>
+</ul>
+<hr>
+<p>linear<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/Mp7p1fEqrJcCcbQDrYMjlER2pBDvMG6oVyCLISbLDkI!/b/dEUBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="linear"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//linear</span></span><br><span class="line">y = c * x / d + b</span><br><span class="line">  = c / d * x + b</span><br><span class="line">  = a * x + b</span><br></pre></td></tr></table></figure></p>
+<p>非常典型的线性函数。</p>
+<hr>
+<p>easeIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/XTI349J6h3F.zJ4uJP8UGiIvoN8v6xxwGSPRt.sjsCU!/b/dEABAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeIn"><br>strongEaseIn<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/jRluvelHIpSEl65GXo7q1bh0gvqenq7r8YiqfCtKOFI!/b/dPMAAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="strongEaseIn"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//easeIn</span></span><br><span class="line">y = c * (x /= d) * x + b</span><br><span class="line">  = c * (x / d) * (x / d) + b</span><br><span class="line">  = c / d ^ <span class="number">2</span> * x ^ <span class="number">2</span> + b</span><br><span class="line">  = a * x ^ <span class="number">2</span> + b</span><br><span class="line"></span><br><span class="line"><span class="comment">//strongEaseIn</span></span><br><span class="line">y = a * x ^ <span class="number">5</span> + b</span><br></pre></td></tr></table></figure></p>
+<p>看曲线图可以明显看出是平滑进入的。</p>
+<p>至于什么叫strongEaseIn，自己看图体会。</p>
+<hr>
+<p>easeOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/OAgJS1StIUC0HlV7YyuOJIrH8MFbY5zeYzpnTqaOa14!/b/dEQBAAAAAAAA&amp;bo=igKQAYoCkAEDFzI!&amp;rf=viewer_4" alt="easeOut"><br>strongEaseOut<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/iTxQm*raWaCQWMft8qwuyoqBxnFtP431nIuGMVedUfE!/b/dEABAAAAAAAA&amp;bo=igKQAQAAAAADFys!&amp;rf=viewer_4" alt="strongEaseOut"><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// easeOut</span></span><br><span class="line"> y = b + c * (- x * x + <span class="number">2</span> * x)</span><br><span class="line"><span class="comment">//strongEaseOut</span></span><br><span class="line">y = c * ((x = x / d - <span class="number">1</span>) * x * x * x + <span class="number">1</span>) + b</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://github.com/VickieYan/2018/03/23/滚蛋吧！BUG君/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -699,7 +835,7 @@
       
         
           
-            <p><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/cjSIjmYUHcKzdH2LHyCFFZS9LT.0VEnYhelPZqe1aWA!/b/dGcBAAAAAAAA&amp;bo=EwewBBMHsAQRBzA!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/MkZYRbOU4J1h.3NxFMMFhcS6T.rstQ4JhUOfbd7KTi0!/b/dPMAAAAAAAAA&amp;bo=EwewBBMHsAQRJxA!&amp;rf=viewer_4" alt="avatar"><br>别问我为什么天天做番茄炒蛋 因为我只会这个（捂脸<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/am49BH6DgRkGYjKrEuWdEpGtkBf*DfXxJ*9IKwjX7.o!/b/dEEBAAAAAAAA&amp;bo=XgY4BFcSJgwRKRU!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/GPbwSM0NcgHqK*vuRzR8MaPvshK0lLEYtrsJ74zN0kI!/b/dGgBAAAAAAAA&amp;bo=XwY4BHoSPQwRGRI!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/asAfUHAO0SH0lJ0WzHN0dKkmJLFrcasHQ0HsQ1dHsF8!/b/dEMBAAAAAAAA&amp;bo=XgY4BFESIgwRGSc!&amp;rf=viewer_4" alt="avatar"><br>可乐鸡翅好评（回头尝试一下蓝色可乐鸡翅<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/EhwdnSiZtOEEXmJ0Y0g4aXIm0lFygDoWLm4QxCkY2Hs!/b/dJUAAAAAAAAA&amp;bo=XgY4BOgShgwRCSo!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/b.3dtW6dpILWqbBa5eWogf0ML7ZPaZn4fr6uF5tkW0w!/b/dAgBAAAAAAAA&amp;bo=XgY4BHEQ5AoRGcU!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/jdpXX2olDfAiNml298KGZjmLFn7.iR.M7vDZ4jxavAg!/b/dAgBAAAAAAAA&amp;bo=XgY4BMkRyAsRGVE!&amp;rf=viewer_4" alt="avatar"><br>荷兰豆意外的很好吃</p>
+            <p>别问我为什么天天做番茄炒蛋 因为我只会这个（捂脸<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/cjSIjmYUHcKzdH2LHyCFFZS9LT.0VEnYhelPZqe1aWA!/b/dGcBAAAAAAAA&amp;bo=EwewBBMHsAQRBzA!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/MkZYRbOU4J1h.3NxFMMFhcS6T.rstQ4JhUOfbd7KTi0!/b/dPMAAAAAAAAA&amp;bo=EwewBBMHsAQRJxA!&amp;rf=viewer_4" alt="avatar"><br>可乐鸡翅好评（回头尝试一下蓝色可乐鸡翅<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/am49BH6DgRkGYjKrEuWdEpGtkBf*DfXxJ*9IKwjX7.o!/b/dEEBAAAAAAAA&amp;bo=XgY4BFcSJgwRKRU!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/GPbwSM0NcgHqK*vuRzR8MaPvshK0lLEYtrsJ74zN0kI!/b/dGgBAAAAAAAA&amp;bo=XwY4BHoSPQwRGRI!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/asAfUHAO0SH0lJ0WzHN0dKkmJLFrcasHQ0HsQ1dHsF8!/b/dEMBAAAAAAAA&amp;bo=XgY4BFESIgwRGSc!&amp;rf=viewer_4" alt="avatar"><br>荷兰豆意外的很好吃<br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/EhwdnSiZtOEEXmJ0Y0g4aXIm0lFygDoWLm4QxCkY2Hs!/b/dJUAAAAAAAAA&amp;bo=XgY4BOgShgwRCSo!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/b.3dtW6dpILWqbBa5eWogf0ML7ZPaZn4fr6uF5tkW0w!/b/dAgBAAAAAAAA&amp;bo=XgY4BHEQ5AoRGcU!&amp;rf=viewer_4" alt="avatar"><br><img src="http://m.qpic.cn/psb?/V10ZHE9M4DB6nN/jdpXX2olDfAiNml298KGZjmLFn7.iR.M7vDZ4jxavAg!/b/dAgBAAAAAAAA&amp;bo=XgY4BMkRyAsRGVE!&amp;rf=viewer_4" alt="avatar"></p>
 
           
         
@@ -1169,7 +1305,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
